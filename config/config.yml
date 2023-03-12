@@ -1,0 +1,37 @@
+src: ''
+dest: ''
+operations:
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+1:
+  type: move
+  x: 0.0
+  y: 0.0
+  z: 0.0
+2:
+  type: rotate
+  mode: Degree
+  x: 0.0
+  y: 0.0
+  z: 0.0
+3:
+  type: cut
+  ul: false
+  ur: false
+  ll: false
+  lr: false
+4:
+  type: patch
+  degree: 1
+5:
+  type: clear
+  height: 0.0
+  above: false
+  below: false
+6:
+  type: mount
+  path: ''
