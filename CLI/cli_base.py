@@ -1,7 +1,8 @@
 from click import Command, Context
 from inspect import Signature
+from abc import ABC, abstractmethod
 
-from framework import *
+from framework import IFactory as IFactory
 from CLI.data_transfer import Backbone
 
 
@@ -14,7 +15,7 @@ class ICLI(ABC):
 
     @classmethod
     @abstractmethod
-    def create_cli(cls):
+    def create_cli(cls) -> ICLI:
         """
         Factory method for easy CLI objects creation.
 

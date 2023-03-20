@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class IFactory(ABC):
@@ -9,7 +10,7 @@ class IFactory(ABC):
 
     @staticmethod
     @abstractmethod
-    def create():
+    def create() -> Any:
         """
         Standard method to create objects. Needs to be overriden for the object-specific factory.
 

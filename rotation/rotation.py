@@ -1,29 +1,33 @@
 import numpy as np
-import open3d as o3d            # type: ignore
-from numpy import ndarray, dtype
+import open3d as o3d  # type: ignore
+from numpy import ndarray, dtype, float_
+from numpy.typing import NDArray
 from typing import Any
 
-def rotation_matrix_func(string: str, rotate_x: float, rotate_y: float, rotate_z: float) -> list[ndarray[Any, dtype[Any]]]:
-    radians: dict[str, float]  = {"x": rotate_x, "y": rotate_y, "z": rotate_z}
+
+def rotation_matrix_func(
+    string: str, rotate_x: float, rotate_y: float, rotate_z: float
+) -> list[ndarray[Any, dtype[Any]]]:
+    radians: dict[str, float] = {"x": rotate_x, "y": rotate_y, "z": rotate_z}
     if string == "Degree":
         radians["x"] = np.radians(rotate_x)
         radians["y"] = np.radians(rotate_y)
         radians["z"] = np.radians(rotate_z)
-    matr_x: ndarray = np.array(
+    matr_x: NDArray[float_] = np.array(
         [
             [1, 0, 0],
             [0, np.cos(radians["x"]), -np.sin(radians["x"])],
             [0, np.sin(radians["x"]), np.cos(radians["x"])],
         ]
     )
-    matr_y: ndarray = np.array(
+    matr_y: NDArray[float_] = np.array(
         [
             [np.cos(radians["y"]), 0, np.sin(radians["y"])],
             [0, 1, 0],
             [-np.sin(radians["y"]), 0, np.cos(radians["y"])],
         ]
     )
-    matr_z: ndarray = np.array(
+    matr_z: NDArray[float_] = np.array(
         [
             [np.cos(radians["z"]), -np.sin(radians["z"]), 0],
             [np.sin(radians["z"]), np.cos(radians["z"]), 0],
@@ -34,7 +38,13 @@ def rotation_matrix_func(string: str, rotate_x: float, rotate_y: float, rotate_z
     return matrices
 
 
-def rotate_file(point_cloud: ndarray[Any, dtype[Any]], string: str, rotate_x: float, rotate_y: float, rotate_z: float) -> o3d.cpu.pybind.geometry.PointCloud:
+def rotate_file(
+    point_cloud: ndarray[Any, dtype[Any]],
+    string: str,
+    rotate_x: float,
+    rotate_y: float,
+    rotate_z: float,
+) -> o3d.cpu.pybind.geometry.PointCloud:
     rotation_matrix = rotation_matrix_func(string, rotate_x, rotate_y, rotate_z)
     rotated: list[Any] = []
 
@@ -56,13 +66,14 @@ def rotate_file(point_cloud: ndarray[Any, dtype[Any]], string: str, rotate_x: fl
     return rotated_cloud
 
 
-
 if __name__ == "__main__":
     input_file: str = input()
     pc: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
-    pc_np: ndarray = np.asarray(pc.points)
-    np_colors: ndarray = np.asarray(pc.colors)
-    new_file: o3d.cpu.pybind.geometry.PointCloud = rotate_file(pc_np, "Degree", 90, 0, 0)
+    pc_np: NDArray[float_] = np.asarray(pc.points)
+    np_colors: NDArray[float_] = np.asarray(pc.colors)
+    new_file: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+        pc_np, "Degree", 90, 0, 0
+    )
     new_file.colors = o3d.utility.Vector3dVector(np_colors)
     o3d.io.write_point_cloud("new_file.ply", new_file)
     o3d.visualization.draw_geometries([new_file])

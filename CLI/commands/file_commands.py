@@ -35,7 +35,7 @@ def execute(ctx: click.Context, path: str) -> None:
 @click.pass_context
 @click.option("--path", type=click.Path(), required=False, default="")
 @click.argument("commands", type=str, nargs=-1)
-def setup(ctx: click.Context, path: str, commands: tuple):
+def setup(ctx: click.Context, path: str, commands: tuple[str]) -> None:
     """
     Create a template configuration file at given location for future execution.
 
@@ -46,13 +46,13 @@ def setup(ctx: click.Context, path: str, commands: tuple):
     """
     ctx.obj.config_path = path
 
-    create_config(commands)
+    create_config(ctx, commands)
 
     ctx.obj.dump_config()
 
 
 @click.pass_context
-def create_config(ctx: click.Context, commands: tuple):
+def create_config(ctx: click.Context, commands: tuple[str]) -> None:
     """
     Internal function, which generates configuration file template.
 

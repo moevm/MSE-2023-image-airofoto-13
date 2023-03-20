@@ -1,0 +1,20 @@
+on: [push]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.10
+      - run: pip install --upgrade pip
+      - run: pip install -r requirements.txt
+      - run: black $(git ls-files '*.py')
+      - uses: EndBug/add-and-commit@v4
+        with:
+          author_name: ${{ github.actor }}
+          author_email: ${{ github.actor }}@users.noreply.github.com
+          message: "Format code with black"
+          add: "-u ."
+          branch: ${{ github.ref }}

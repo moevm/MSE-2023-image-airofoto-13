@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from typing import Any
 
 
 class SingletonMeta(type):
@@ -10,9 +11,9 @@ class SingletonMeta(type):
     _instances - is a dictionary to store any singleton class in use.
     """
 
-    _instances = {}
+    _instances: dict[type, SingletonMeta] = {}
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args: list[Any], **kwargs: dict[str, Any]) -> Any:
         """
         Singleton business logic. Checks if the given class already exists (i.e. is inside _instances dictionary),
         if not - creates an instance,  adds it to the _instances and returns the created instance.

@@ -1,10 +1,27 @@
-from typing import List
+from typing import (
+    Any,
+    List,
+    Callable,
+    Optional,
+    Dict,
+    Protocol,
+    TypeVar,
+    Generic,
+    cast,
+    NoReturn,
+)
+from functools import wraps
 
 from managers import FileManager
 from .backbone_base import *
+from click import Command
 
 
-def pass_backbone(f: callable) -> callable:
+BackboneCallableReturnType = TypeVar("BackboneCallableReturnType")
+# TODO сделать более универсальную анннотацию после стабилизации поддержки TypeVarTuple и TypeVarDict
+def pass_backbone(
+    f: Callable[[Any, Backbone, Any], BackboneCallableReturnType]
+) -> Callable[..., BackboneCallableReturnType]:
 
     """
     Decorator to pass Backbone object to a given function. Similar to Click's pass_context,
@@ -14,7 +31,8 @@ def pass_backbone(f: callable) -> callable:
     :return: wrapped function.
     """
 
-    def decorated(*args, **kwargs):
+    @wraps(f)
+    def decorated(*args: Any, **kwargs: Any) -> Any:
 
         new_args = list(args)
         new_args.insert(1, Backbone())
@@ -31,10 +49,10 @@ class Backbone(IBackbone):
     Business object class to store and process CLI data. Main objectives: configuration file handling and cli-command
     meta-data storage.
 
-    Utilizes Singleton pattern, so there can only be one instance of Backbone class at any time.
+    Utilizes Singleton pattern, so there can only be one instance of Backbone class at Any time.
     """
 
-    def __init__(self, requirements: List[str] = None):
+    def __init__(self, requirements: Optional[List[str]] = None):
 
         """
         Constructor method for Backbone class.
@@ -49,9 +67,11 @@ class Backbone(IBackbone):
             requirements = Backbone.get_minimal_requirements()
 
         if not Backbone.check_keys(requirements):
-            raise ValueError(f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed.")
+            raise ValueError(
+                f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed."
+            )
 
-        self.__config = dict.fromkeys(requirements)
+        self.__config: Dict[str | int, Any] = dict.fromkeys(requirements)
         self.__config["src"] = ""
         self.__config["dest"] = ""
         self.__config["operations"] = []
@@ -59,7 +79,7 @@ class Backbone(IBackbone):
         self.__default_config_path = ".\\config\\config.yml"
         self.config_path = ""
 
-        self.commands = {}
+        self.commands: dict[str, Command] = {}
 
         self.__file = FileManager()
 
@@ -105,14 +125,14 @@ class Backbone(IBackbone):
 
         return self.config_path
 
-    def add_to_config(self, key: int | str, value: any) -> None:
+    def add_to_config(self, key: int | str, value: Any) -> None:
         self.__config[key] = value
 
-    def get_from_config(self, key: str) -> any:
+    def get_from_config(self, key: str) -> Any:
         if key not in self.__config:
             raise ValueError(f"{key} not found in config!")
 
-    def enqueue(self, operation: str, parameters: Dict[str, any]) -> None:
+    def enqueue(self, operation: str, parameters: Dict[str, Any]) -> None:
 
         if operation not in self.commands:
             raise ValueError(f"{operation} is not supported!")
@@ -131,10 +151,11 @@ class Backbone(IBackbone):
         if operation not in self.commands:
             raise ValueError(f"{operation} is not supported!")
 
-        params = {"type": operation}
+        params: dict[str, Any] = {"type": operation}
 
         for arg in self.commands[operation].params:
-            params[arg.name] = arg.default
+            if arg.name:
+                params[arg.name] = arg.default
 
         number = len(self.__config["operations"]) + 1
 
@@ -142,9 +163,11 @@ class Backbone(IBackbone):
 
         self.add_to_config(number, params)
 
-    def set_config(self, config: Dict[str, any]) -> None:
+    def set_config(self, config: Dict[str, Any]) -> None:
         if not Backbone.check_keys(list(config.keys())):
-            raise ValueError(f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed.")
+            raise ValueError(
+                f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed."
+            )
 
         self.__config["src"] = config["src"]
         self.__config["dest"] = config["dest"]
@@ -154,10 +177,10 @@ class Backbone(IBackbone):
         for operation in self.__config["operations"]:
             self.__config[operation] = config[operation]
 
-    def get_config(self) -> Dict[str, any]:
+    def get_config(self) -> Dict[str | int, Any]:
         return self.__config
 
-    def load_config(self, path: str = None) -> None:
+    def load_config(self, path: Optional[str] = None) -> None:
         if not path:
             path = self.get_config_path()
 
@@ -165,7 +188,7 @@ class Backbone(IBackbone):
 
         self.set_config(configuration)
 
-    def dump_config(self, path: str = None) -> None:
+    def dump_config(self, path: Optional[str] = None) -> None:
         if not path:
             path = self.get_config_path()
 
