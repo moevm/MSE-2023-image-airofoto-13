@@ -130,7 +130,7 @@ class Backbone(IBackbone):
             if arg.name:
                 params[arg.name] = arg.default
             else:
-                raise KeyError('No argument name provided')
+                raise KeyError("No argument name provided")
 
         number = len(self.__config["operations"]) + 1
 

@@ -71,9 +71,7 @@ if __name__ == "__main__":
     pc: o3d.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
     pc_np: NDArray[float_] = np.asarray(pc.points)
     np_colors: NDArray[float_] = np.asarray(pc.colors)
-    new_file: o3d.geometry.PointCloud = rotate_file(
-        pc_np, "Degree", 90, 0, 0
-    )
+    new_file: o3d.geometry.PointCloud = rotate_file(pc_np, "Degree", 90, 0, 0)
     new_file.colors = o3d.utility.Vector3dVector(np_colors)
     o3d.io.write_point_cloud("new_file.ply", new_file)
     o3d.visualization.draw_geometries([new_file])
