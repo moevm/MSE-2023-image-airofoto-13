@@ -1,27 +1,8 @@
-from .parser_base import *
-from typing import Any, Callable, Optional
+from .parser_base import IParser
+from framework import IFactory
+from typing import Any, Callable
 from io import TextIOWrapper
 import yaml
-
-
-class YmlParserFactory(IFactory):
-
-    """
-    Factory class for the .yml files Parser objects.
-    """
-
-    @staticmethod
-    def create() -> YmlParser:
-
-        """
-        Standard method to create .yml files Parser objects.
-
-        :return: YmlParser object.
-        """
-
-        return YmlParser(
-            file_format="yml", reader=yaml.safe_load, writer=yaml.safe_dump
-        )
 
 
 class YmlParser(IParser):
@@ -47,7 +28,7 @@ class YmlParser(IParser):
         self.__writer = writer
 
     @classmethod
-    def create_parser(cls) -> YmlParser:
+    def create_parser(cls) -> "YmlParser":
         return YmlParserFactory.create()
 
     def supported_format(self) -> str:
@@ -64,3 +45,23 @@ class YmlParser(IParser):
 
         with open(file_path, "w+") as dest:
             self.__writer(data=data, stream=dest, sort_keys=False)
+
+
+class YmlParserFactory(IFactory):
+
+    """
+    Factory class for the .yml files Parser objects.
+    """
+
+    @staticmethod
+    def create() -> YmlParser:
+
+        """
+        Standard method to create .yml files Parser objects.
+
+        :return: YmlParser object.
+        """
+
+        return YmlParser(
+            file_format="yml", reader=yaml.safe_load, writer=yaml.safe_dump
+        )

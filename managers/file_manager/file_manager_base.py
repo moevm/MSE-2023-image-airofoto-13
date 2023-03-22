@@ -21,8 +21,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: list of file formats (extensions) supported.
         """
 
-        pass
-
     @abstractmethod
     def is_supported(self, mode: str) -> bool:
 
@@ -32,8 +30,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :param mode: file extension.
         :return: boolean check result.
         """
-
-        pass
 
     @abstractmethod
     def path_exists(self, path: str) -> bool:
@@ -45,8 +41,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: boolean check result.
         """
 
-        pass
-
     @abstractmethod
     def create_path(self, path: str) -> None:
 
@@ -56,8 +50,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :param path: path with missing directories.
         :return: None.
         """
-
-        pass
 
     @abstractmethod
     def read(self, path: str) -> Any:
@@ -71,8 +63,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: data from file.
         """
 
-        pass
-
     @abstractmethod
     def write(self, path: str, data: Any) -> None:
 
@@ -83,5 +73,3 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :param data: data to write to file.
         :return: None.
         """
-
-        pass

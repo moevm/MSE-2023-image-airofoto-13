@@ -2,19 +2,12 @@ from click import Argument, Command
 import click
 from inspect import Signature
 
-from CLI.cli_base import ICLI, IFactory
+from CLI.cli_base import ICLI
+from framework import IFactory
 from CLI.commands import load, execute, setup, move, rotate, cut, patch, clear, mount
 from CLI.data_transfer import Backbone, pass_backbone
 
 __all__ = ["CliFactory", "ICLI", "Cli"]
-
-
-class CliFactory(IFactory):
-    @staticmethod
-    def create() -> Cli:
-        commands = [load, execute, setup, move, rotate, cut, patch, clear, mount]
-
-        return Cli(commands)
 
 
 class Cli(ICLI):
@@ -24,7 +17,7 @@ class Cli(ICLI):
             self.set_command(command)
 
     @classmethod
-    def create_cli(cls) -> Cli:
+    def create_cli(cls) -> "Cli":
         return CliFactory.create()
 
     @pass_backbone
@@ -32,6 +25,8 @@ class Cli(ICLI):
         if command.name:
             backbone.commands[command.name] = command
             self.entry_point.add_command(command, command.name)
+        else:
+            raise KeyError("Command with empty name provided")
 
     def generate_command(self, name: str, args: Signature) -> None:
         new_command = Command(name=name)
@@ -64,3 +59,11 @@ class Cli(ICLI):
         backbone.add_to_config("dest", dest)
 
         ctx.obj = backbone
+
+
+class CliFactory(IFactory):
+    @staticmethod
+    def create() -> Cli:
+        commands = [load, execute, setup, move, rotate, cut, patch, clear, mount]
+
+        return Cli(commands)

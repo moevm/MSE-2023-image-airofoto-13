@@ -25,8 +25,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def add_to_config(self, key: int | str, value: Any) -> None:
 
@@ -37,8 +35,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :param value: value of the parameter.
         :return: None.
         """
-
-        pass
 
     @abstractmethod
     def get_from_config(self, key: str) -> Any:
@@ -52,8 +48,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: value of the given parameter.
         """
 
-        pass
-
     @abstractmethod
     def get_config(self) -> Dict[str | int, Any]:
 
@@ -62,8 +56,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
 
         :return: meta-config dictionary.
         """
-
-        pass
 
     @abstractmethod
     def enqueue(self, operation: str, parameters: Dict[str, Any]) -> None:
@@ -78,8 +70,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def enqueue_default(self, operation: str) -> None:
 
@@ -93,8 +83,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def load_config(self, path: Optional[str] = None) -> None:
 
@@ -106,8 +94,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def dump_config(self, path: Optional[str] = None) -> None:
 
@@ -118,5 +104,3 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :param path: |OPTIONAL| path to save the configuration file to.
         :return: None.
         """
-
-        pass

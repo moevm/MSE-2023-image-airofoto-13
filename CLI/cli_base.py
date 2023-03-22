@@ -2,7 +2,6 @@ from click import Command, Context
 from inspect import Signature
 from abc import ABC, abstractmethod
 
-from framework import IFactory as IFactory
 from CLI.data_transfer import Backbone
 
 
@@ -15,14 +14,12 @@ class ICLI(ABC):
 
     @classmethod
     @abstractmethod
-    def create_cli(cls) -> ICLI:
+    def create_cli(cls) -> "ICLI":
         """
         Factory method for easy CLI objects creation.
 
         :return: CLI object.
         """
-
-        pass
 
     @staticmethod
     @abstractmethod
@@ -36,8 +33,6 @@ class ICLI(ABC):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def set_command(self, backbone: Backbone, command: Command) -> None:
 
@@ -50,8 +45,6 @@ class ICLI(ABC):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
     def generate_command(self, name: str, args: Signature) -> None:
 
@@ -62,5 +55,3 @@ class ICLI(ABC):
         :param args: signature object, containing desired parameters for command.
         :return: None.
         """
-
-        pass

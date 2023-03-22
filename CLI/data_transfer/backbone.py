@@ -4,11 +4,7 @@ from typing import (
     Callable,
     Optional,
     Dict,
-    Protocol,
     TypeVar,
-    Generic,
-    cast,
-    NoReturn,
 )
 from functools import wraps
 
@@ -18,29 +14,6 @@ from click import Command
 
 
 BackboneCallableReturnType = TypeVar("BackboneCallableReturnType")
-# TODO сделать более универсальную анннотацию после стабилизации поддержки TypeVarTuple и TypeVarDict
-def pass_backbone(
-    f: Callable[[Any, Backbone, Any], BackboneCallableReturnType]
-) -> Callable[..., BackboneCallableReturnType]:
-
-    """
-    Decorator to pass Backbone object to a given function. Similar to Click's pass_context,
-    but does not raise error if Backbone is not initialized.
-
-    :param f: function to wrap.
-    :return: wrapped function.
-    """
-
-    @wraps(f)
-    def decorated(*args: Any, **kwargs: Any) -> Any:
-
-        new_args = list(args)
-        new_args.insert(1, Backbone())
-        args = tuple(new_args)
-
-        return f(*args, **kwargs)
-
-    return decorated
 
 
 class Backbone(IBackbone):
@@ -49,7 +22,7 @@ class Backbone(IBackbone):
     Business object class to store and process CLI data. Main objectives: configuration file handling and cli-command
     meta-data storage.
 
-    Utilizes Singleton pattern, so there can only be one instance of Backbone class at Any time.
+    Utilizes Singleton pattern, so there can only be one instance of Backbone class at any time.
     """
 
     def __init__(self, requirements: Optional[List[str]] = None):
@@ -156,6 +129,8 @@ class Backbone(IBackbone):
         for arg in self.commands[operation].params:
             if arg.name:
                 params[arg.name] = arg.default
+            else:
+                raise KeyError('No argument name provided')
 
         number = len(self.__config["operations"]) + 1
 
@@ -193,3 +168,28 @@ class Backbone(IBackbone):
             path = self.get_config_path()
 
         self.__file.write(path=path, data=self.__config)
+
+
+# TODO сделать более универсальную анннотацию после стабилизации поддержки TypeVarTuple и TypeVarDict
+def pass_backbone(
+    f: Callable[[Any, Backbone, Any], BackboneCallableReturnType]
+) -> Callable[..., BackboneCallableReturnType]:
+
+    """
+    Decorator to pass Backbone object to a given function. Similar to Click's pass_context,
+    but does not raise error if Backbone is not initialized.
+
+    :param f: function to wrap.
+    :return: wrapped function.
+    """
+
+    @wraps(f)
+    def decorated(*args: Any, **kwargs: Any) -> Any:
+
+        new_args = list(args)
+        new_args.insert(1, Backbone())
+        args = tuple(new_args)
+
+        return f(*args, **kwargs)
+
+    return decorated

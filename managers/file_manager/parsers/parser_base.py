@@ -1,4 +1,3 @@
-from framework import *
 from abc import abstractmethod, ABC
 from typing import Any
 
@@ -14,7 +13,7 @@ class IParser(ABC):
 
     @classmethod
     @abstractmethod
-    def create_parser(cls) -> IParser:
+    def create_parser(cls) -> "IParser":
 
         """
         A factory method for easy creation of parser objects.
@@ -22,8 +21,6 @@ class IParser(ABC):
 
         :return: A specific Parser object.
         """
-
-        pass
 
     @abstractmethod
     def supported_format(self) -> str:
@@ -33,8 +30,6 @@ class IParser(ABC):
 
         :return: A specific Parser's supported format.
         """
-
-        pass
 
     @abstractmethod
     def file_input(self, file_path: str) -> Any:
@@ -48,8 +43,6 @@ class IParser(ABC):
         :return: Data from the given file.
         """
 
-        pass
-
     @abstractmethod
     def file_output(self, file_path: str, data: Any) -> None:
         """
@@ -61,5 +54,3 @@ class IParser(ABC):
         :param data: Data to write ti file.
         :return: None.
         """
-
-        pass

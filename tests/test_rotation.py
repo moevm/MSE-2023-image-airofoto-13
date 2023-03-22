@@ -1,9 +1,8 @@
 import numpy as np
 from numpy.typing import NDArray
 import open3d as o3d  # type: ignore
-from rotation import rotate_file
 import math
-
+from rotation import rotate_file
 
 # checking the rotation for an angle in radians
 def test_rotate_ply_file_rotates_radians() -> None:

@@ -51,8 +51,14 @@ def setup(ctx: click.Context, path: str, commands: tuple[str]) -> None:
     ctx.obj.dump_config()
 
 
-@click.pass_context
+# исправление по https://stackoverflow.com/questions/70467389/how-to-fix-mypy-error-when-using-clicks-pass-context
 def create_config(ctx: click.Context, commands: tuple[str]) -> None:
+    for command in commands:
+        ctx.obj.enqueue_default(command)
+
+
+@click.pass_context
+def __create_config(ctx: click.Context, commands: tuple[str]) -> None:
     """
     Internal function, which generates configuration file template.
 
@@ -60,5 +66,4 @@ def create_config(ctx: click.Context, commands: tuple[str]) -> None:
     :param commands: Sequence of command names, provided by user, to generate templates for in config file.
     :return: None.
     """
-    for command in commands:
-        ctx.obj.enqueue_default(command)
+    __create_config(ctx, commands)

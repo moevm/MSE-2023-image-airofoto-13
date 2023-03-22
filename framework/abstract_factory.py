@@ -16,5 +16,3 @@ class IFactory(ABC):
 
         :return: - Custom object.
         """
-
-        pass

@@ -44,7 +44,7 @@ def rotate_file(
     rotate_x: float,
     rotate_y: float,
     rotate_z: float,
-) -> o3d.cpu.pybind.geometry.PointCloud:
+) -> o3d.geometry.PointCloud:
     rotation_matrix = rotation_matrix_func(string, rotate_x, rotate_y, rotate_z)
     rotated: list[Any] = []
 
@@ -68,10 +68,10 @@ def rotate_file(
 
 if __name__ == "__main__":
     input_file: str = input()
-    pc: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
+    pc: o3d.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
     pc_np: NDArray[float_] = np.asarray(pc.points)
     np_colors: NDArray[float_] = np.asarray(pc.colors)
-    new_file: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    new_file: o3d.geometry.PointCloud = rotate_file(
         pc_np, "Degree", 90, 0, 0
     )
     new_file.colors = o3d.utility.Vector3dVector(np_colors)

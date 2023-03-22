@@ -11,7 +11,7 @@ class SingletonMeta(type):
     _instances - is a dictionary to store any singleton class in use.
     """
 
-    _instances: dict[type, SingletonMeta] = {}
+    _instances: dict[type, "SingletonMeta"] = {}
 
     def __call__(cls, *args: list[Any], **kwargs: dict[str, Any]) -> Any:
         """
@@ -34,5 +34,3 @@ class EmbedSingleton(ABCMeta, SingletonMeta):
     A helper class to easily embed Singleton pattern in any of the interfaces (classes derived from ABC).
 
     """
-
-    pass
