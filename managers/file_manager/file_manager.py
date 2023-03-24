@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any, Optional, List
 
-from .parsers import *
+from .parsers import IParser, YmlParser
 from .file_manager_base import *
 
 
@@ -11,7 +11,7 @@ class FileManager(IFileManager):
     Generic file handler class.
     """
 
-    def __init__(self, parsers: Dict[str, IParser] = None):
+    def __init__(self, parsers: Optional[Dict[str, IParser]] = None):
 
         """
         Constructor method for FileManager class objects.
@@ -35,7 +35,7 @@ class FileManager(IFileManager):
         :return: file extension (without the dot!).
         """
 
-        return path[path.rfind('.') + 1::]
+        return path[path.rfind(".") + 1 : :]
 
     @staticmethod
     def get_filename(path: str) -> int:
@@ -48,7 +48,7 @@ class FileManager(IFileManager):
         :return: index of the beginning of the file name.
         """
 
-        return path.rfind('\\') + 1
+        return path.rfind("\\") + 1
 
     def path_exists(self, path: str) -> bool:
         p = Path(path)
@@ -71,7 +71,7 @@ class FileManager(IFileManager):
 
         return False
 
-    def read(self, path: str) -> any:
+    def read(self, path: str) -> Any:
         mode = FileManager.get_format(path)
 
         if not self.is_supported(mode):
@@ -82,13 +82,13 @@ class FileManager(IFileManager):
 
         return self.__modes[mode].file_input(path)
 
-    def write(self, path: str, data: any) -> None:
+    def write(self, path: str, data: Any) -> None:
         mode = FileManager.get_format(path)
 
         if not self.is_supported(mode):
             raise ValueError(f"{mode} file type is not supported!")
 
-        if not self.path_exists(path[:self.get_filename(path)]):
-            self.create_path(path[:self.get_filename(path)])
+        if not self.path_exists(path[: self.get_filename(path)]):
+            self.create_path(path[: self.get_filename(path)])
 
         self.__modes[mode].file_output(file_path=path, data=data)

@@ -1,6 +1,6 @@
-from typing import List
-
 from framework import *
+from abc import abstractmethod, ABC
+from typing import Any
 
 
 class IFileManager(ABC, metaclass=EmbedSingleton):
@@ -13,15 +13,13 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
     """
 
     @abstractmethod
-    def supported_formats(self) -> List[str]:
+    def supported_formats(self) -> list[str]:
 
         """
         Helper method to list all the file formats supported by the specific file handler.
 
         :return: list of file formats (extensions) supported.
         """
-
-        pass
 
     @abstractmethod
     def is_supported(self, mode: str) -> bool:
@@ -33,8 +31,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: boolean check result.
         """
 
-        pass
-
     @abstractmethod
     def path_exists(self, path: str) -> bool:
 
@@ -44,8 +40,6 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :param path: path to be checked.
         :return: boolean check result.
         """
-
-        pass
 
     @abstractmethod
     def create_path(self, path: str) -> None:
@@ -57,10 +51,8 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
-    def read(self, path: str):
+    def read(self, path: str) -> Any:
 
         """
         Extract data from file of supported format.
@@ -71,10 +63,8 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :return: data from file.
         """
 
-        pass
-
     @abstractmethod
-    def write(self, path: str, data: any) -> None:
+    def write(self, path: str, data: Any) -> None:
 
         """
         Output data to file along the given path. Creates the file if it doesn't exist.
@@ -83,5 +73,3 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         :param data: data to write to file.
         :return: None.
         """
-
-        pass

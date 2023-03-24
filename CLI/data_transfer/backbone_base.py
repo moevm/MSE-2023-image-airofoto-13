@@ -1,4 +1,5 @@
-from typing import Dict
+from typing import Any, Dict, Optional
+from abc import abstractmethod, ABC
 
 from framework import *
 
@@ -12,7 +13,7 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
     """
 
     @abstractmethod
-    def set_config(self, config: Dict[str, any]) -> None:
+    def set_config(self, config: Dict[str, Any]) -> None:
 
         """
         Stores the given dictionary as meta-config variable inside the Backbone class
@@ -24,10 +25,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
-    def add_to_config(self, key: int | str, value: any) -> None:
+    def add_to_config(self, key: int | str, value: Any) -> None:
 
         """
         Appends a key-value pair to the current meta-config dictionary variable inside Backbone class.
@@ -37,10 +36,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
-    def get_from_config(self, key: str) -> any:
+    def get_from_config(self, key: str) -> Any:
 
         """
         Returns a value from meta-config dictionary by given key.
@@ -51,10 +48,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: value of the given parameter.
         """
 
-        pass
-
     @abstractmethod
-    def get_config(self) -> Dict[str, any]:
+    def get_config(self) -> Dict[str | int, Any]:
 
         """
         Returns a copy of the meta-config dictionary.
@@ -62,10 +57,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: meta-config dictionary.
         """
 
-        pass
-
     @abstractmethod
-    def enqueue(self, operation: str, parameters: Dict[str, any]) -> None:
+    def enqueue(self, operation: str, parameters: Dict[str, Any]) -> None:
 
         """
         A standard way to save callback results of CLI commands. Accepts input only from registered commands.
@@ -76,8 +69,6 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :param parameters: callback results of the command.
         :return: None.
         """
-
-        pass
 
     @abstractmethod
     def enqueue_default(self, operation: str) -> None:
@@ -92,10 +83,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
-    def load_config(self, path: str = None) -> None:
+    def load_config(self, path: Optional[str] = None) -> None:
 
         """
         Loads configuration to the Backbone class from a file either along the given path,
@@ -105,10 +94,8 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :return: None.
         """
 
-        pass
-
     @abstractmethod
-    def dump_config(self, path: str = None) -> None:
+    def dump_config(self, path: Optional[str] = None) -> None:
 
         """
         Saves the current meta-config dictionary from Backbone class to either given location or the default one
@@ -117,5 +104,3 @@ class IBackbone(ABC, metaclass=EmbedSingleton):
         :param path: |OPTIONAL| path to save the configuration file to.
         :return: None.
         """
-
-        pass
