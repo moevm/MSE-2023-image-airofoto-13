@@ -62,5 +62,3 @@ def create_config(ctx: click.Context, commands: tuple[str]) -> None:
     """
     for command in commands:
         ctx.obj.enqueue_default(command)
-
-
