@@ -1,12 +1,15 @@
+from typing import Any, List, Dict, Callable, TypeVar
 from inspect import signature, Signature
-from typing import Any, List, Dict, Callable
 
 from framework import ICommand, ITarget
 from .plugin_base import IPlugin
 
 
+PluginCallableReturnType = TypeVar("PluginCallableReturnType")
+
+
 class Plugin(ICommand, IPlugin):
-    def __init__(self, executable: Callable) -> None:
+    def __init__(self, executable: Callable[[Any], PluginCallableReturnType]) -> None:
         self.__executable = executable
 
     def get_signature(self) -> Signature:
