@@ -1,7 +1,9 @@
 import open3d as o3d
 
 
-def move(data: o3d.geometry.PointCloud, x: float, y: float, z: float) -> o3d.geometry.PointCloud:
+def move(
+    data: o3d.geometry.PointCloud, x: float, y: float, z: float
+) -> o3d.geometry.PointCloud:
     """
     Dummy function for shift transformation of PointCloud.
 

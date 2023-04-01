@@ -6,7 +6,6 @@ from framework import ITarget
 
 
 class PluginRegistry(IPluginRegistry):
-
     def __init__(self, plugins: Optional[Dict[str, IPlugin]] = None):
         if plugins:
             self.__plugins = plugins
@@ -28,9 +27,11 @@ class PluginRegistry(IPluginRegistry):
         if plugin not in self.__plugins:
             raise KeyError(f"{plugin} was not found in the registry!")
 
-        return PluginInfo(plugin,
-                          self.__plugins[plugin].get_help(),
-                          self.__plugins[plugin].get_signature())
+        return PluginInfo(
+            plugin,
+            self.__plugins[plugin].get_help(),
+            self.__plugins[plugin].get_signature(),
+        )
 
     def invoke(self, plugin: str, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
         if plugin not in self.__plugins:

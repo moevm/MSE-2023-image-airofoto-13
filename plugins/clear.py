@@ -1,7 +1,9 @@
 import open3d as o3d
 
 
-def clear(data: o3d.geometry.PointCloud, height: float, above: bool, below: bool) -> o3d.geometry.PointCloud:
+def clear(
+    data: o3d.geometry.PointCloud, height: float, above: bool, below: bool
+) -> o3d.geometry.PointCloud:
     """
      Dummy function for height-filtering of PointCloud.
 

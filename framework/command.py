@@ -27,7 +27,9 @@ class ICommand(ABC):
     """
 
     @abstractmethod
-    def execute(self, target: ITarget, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+    def execute(
+        self, target: ITarget, *args: List[Any], **kwargs: Dict[str, Any]
+    ) -> None:
         """
         The invocation method for commands.
 

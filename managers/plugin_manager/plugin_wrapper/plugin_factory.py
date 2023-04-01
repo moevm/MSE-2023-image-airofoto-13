@@ -5,7 +5,6 @@ from .plugin_base import IPluginFactory, IPlugin
 from .plugin import Plugin
 
 
-
 class PluginFactory(IPluginFactory):
 
     """
@@ -22,4 +21,8 @@ class PluginFactory(IPluginFactory):
             return Plugin(import_module(f"{package}.{name}").__dict__[name])
 
         else:
-            return Plugin(import_module(f"{PluginFactory.__plugin_directory}.{name}").__dict__[name])
+            return Plugin(
+                import_module(f"{PluginFactory.__plugin_directory}.{name}").__dict__[
+                    name
+                ]
+            )

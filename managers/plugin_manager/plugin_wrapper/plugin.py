@@ -6,7 +6,6 @@ from .plugin_base import IPlugin
 
 
 class Plugin(ICommand, IPlugin):
-
     def __init__(self, executable: callable) -> None:
         self.__executable = executable
 
@@ -16,5 +15,7 @@ class Plugin(ICommand, IPlugin):
     def get_help(self) -> str:
         return self.__executable.__doc__
 
-    def execute(self, target: ITarget, *args: List[Any], **kwargs: Dict[str, Any]) -> None:
+    def execute(
+        self, target: ITarget, *args: List[Any], **kwargs: Dict[str, Any]
+    ) -> None:
         target.receive(self.__executable(*args, **kwargs))
