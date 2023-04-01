@@ -1,9 +1,11 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from inspect import Signature
 from typing import Optional
 
+from framework import ICommand
 
-class IPlugin(ABC):
+
+class IPlugin(ICommand):
 
     """
     A generic wrapper for plug-in functions
