@@ -2,7 +2,7 @@ import numpy as np
 from numpy.typing import NDArray
 import open3d as o3d  # type: ignore
 import math
-from rotation import rotate_file
+from plugins import rotate
 
 # checking the rotation for an angle in radians
 def test_rotate_ply_file_rotates_radians() -> None:
@@ -14,7 +14,7 @@ def test_rotate_ply_file_rotates_radians() -> None:
         "../images/rotate_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
-    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
         ply_np, "Radian", 0, 0, math.pi / 2
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
@@ -31,7 +31,7 @@ def test_rotate_ply_file_rotates_z_90() -> None:
         "../images/rotate_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
-    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
         ply_np, "Degree", 0, 0, 90
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
@@ -48,7 +48,7 @@ def test_rotate_ply_file_rotates_x_30() -> None:
         "../images/rotate_x_30.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
-    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
         ply_np, "Degree", 30, 0, 0
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
@@ -65,7 +65,7 @@ def test_rotate_ply_file_rotates_x_30_z_90() -> None:
         "../images/rotate_x_30_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
-    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
         ply_np, "Degree", 30, 0, 90
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
@@ -82,7 +82,7 @@ def test_rotate_ply_file_rotates_y_270_5() -> None:
         "../images/rotate_y_270_5.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
-    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate_file(
+    rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
         ply_np, "Degree", 0, 270.5, 0
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)

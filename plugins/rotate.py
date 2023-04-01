@@ -38,13 +38,25 @@ def rotation_matrix_func(
     return matrices
 
 
-def rotate_file(
+def rotate(
     point_cloud: ndarray[Any, dtype[Any]],
     string: str,
     rotate_x: float,
     rotate_y: float,
     rotate_z: float,
 ) -> o3d.geometry.PointCloud:
+
+    """
+    Rotation transformation plugin.
+
+    :param point_cloud:
+    :param string:
+    :param rotate_x:
+    :param rotate_y:
+    :param rotate_z:
+    :return:
+    """
+
     rotation_matrix = rotation_matrix_func(string, rotate_x, rotate_y, rotate_z)
     rotated: list[Any] = []
 
@@ -71,7 +83,7 @@ if __name__ == "__main__":
     pc: o3d.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
     pc_np: NDArray[float_] = np.asarray(pc.points)
     np_colors: NDArray[float_] = np.asarray(pc.colors)
-    new_file: o3d.geometry.PointCloud = rotate_file(pc_np, "Degree", 90, 0, 0)
+    new_file: o3d.geometry.PointCloud = rotate(pc_np, "Degree", 90, 0, 0)
     new_file.colors = o3d.utility.Vector3dVector(np_colors)
     o3d.io.write_point_cloud("new_file.ply", new_file)
     o3d.visualization.draw_geometries([new_file])
