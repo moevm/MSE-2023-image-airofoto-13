@@ -12,7 +12,7 @@ class PluginRegistry(IPluginRegistry):
         else:
             self.__plugins = {}
 
-        self.__target: Optional[ITarget] = None
+        self.__target: ITarget = None
 
     def add_plugin(self, name: str, package: Optional[str] = None) -> None:
         self.__plugins[name] = PluginFactory.make_plugin(name, package)
