@@ -1,4 +1,4 @@
-import open3d as o3d # type: ignore
+import open3d as o3d  # type: ignore
 
 
 def mount(data: o3d.geometry.PointCloud, picture_path: str) -> o3d.geometry.PointCloud:
