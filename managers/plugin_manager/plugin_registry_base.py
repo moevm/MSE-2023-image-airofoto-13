@@ -43,6 +43,7 @@ class IPluginRegistry(ABC):
         to the ITarget instance specified in the __target attribute of the current IPluginRegistry instance.
 
         :raises: KeyError: if the plugin with given name is not registered in current IPluginRegistry instance.
+        :raises TypeError: if there is no ITarget instance to pass the invocation result to.
 
         :param plugin: name of the plugin to invoke.
         :param args: list of positional arguments to pass.
