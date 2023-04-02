@@ -37,4 +37,7 @@ class PluginRegistry(IPluginRegistry):
         if plugin not in self.__plugins:
             raise KeyError(f"{plugin} was not found in the registry!")
 
+        if self.__target is None:
+            raise TypeError("No target for plugin invocation!")
+
         self.__plugins[plugin].execute(self.__target, *args, **kwargs)
