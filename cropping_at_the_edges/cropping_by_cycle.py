@@ -34,3 +34,4 @@ if __name__ == "__main__":
     new_file.colors = o3d.utility.Vector3dVector(new_colors)
     o3d.io.write_point_cloud("new_file.ply", new_file)
     o3d.visualization.draw_geometries([new_file])
+    

@@ -31,7 +31,6 @@ def crop_by_box(pc: o3d.cpu.pybind.geometry.PointCloud, crop_rx: float, crop_lx:
     return pc_croped
 
 
-
 if __name__ == "__main__":
     input_file: str = input()
     pc: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
