@@ -3,7 +3,7 @@ import open3d as o3d  # type: ignore
 from numpy.typing import NDArray
 
 from numpy import ndarray, dtype, float_
-from typing import Any, Tuple
+from typing import Any, Tuple, List
 
 
 def filter_point_cloud_by_height(
@@ -11,7 +11,7 @@ def filter_point_cloud_by_height(
     colors_of_pc: ndarray[Any, dtype[Any]],
     min_height: float,
     max_height: float,
-):
+) -> Tuple[Any, List[Any]]:
     result: list[Any] = []
     colors: list[Any] = []
 
@@ -26,7 +26,7 @@ def filter_point_cloud_by_height(
     )  
     result_cloud.points = o3d.utility.Vector3dVector(
         result
-    )  
+    ) 
 
     return result_cloud, colors
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     pc: o3d.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
     pc_np: NDArray[float_] = np.asarray(pc.points)
     np_colors: NDArray[float_] = np.asarray(pc.colors)
-    new: Tuple[o3d.geometry.PointCloud, NDArray[float_]] = filter_point_cloud_by_height(
+    new: Tuple[Any, List[Any]] = filter_point_cloud_by_height(
         pc_np, np_colors, min_height, max_height
     )
     new_file = new[0]
