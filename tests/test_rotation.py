@@ -9,13 +9,13 @@ def test_rotate_ply_file_rotates_radians() -> None:
     ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/model.ply"
     )
-    ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
+    # ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
     expected_result_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/rotate_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
     rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
-        ply_np, "Radian", 0, 0, math.pi / 2
+        ply_file, "Radian", 0, 0, math.pi / 2
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np, 2), np.round(expected_result, 2))
@@ -26,13 +26,13 @@ def test_rotate_ply_file_rotates_z_90() -> None:
     ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/model.ply"
     )
-    ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
+    # ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
     expected_result_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/rotate_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
     rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
-        ply_np, "Degree", 0, 0, 90
+        ply_file, "Degree", 0, 0, 90
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np, 2), np.round(expected_result, 2))
@@ -43,13 +43,13 @@ def test_rotate_ply_file_rotates_x_30() -> None:
     ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/model.ply"
     )
-    ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
+    # ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
     expected_result_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/rotate_x_30.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
     rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
-        ply_np, "Degree", 30, 0, 0
+        ply_file, "Degree", 30, 0, 0
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np, 2), np.round(expected_result, 2))
@@ -60,13 +60,13 @@ def test_rotate_ply_file_rotates_x_30_z_90() -> None:
     ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/model.ply"
     )
-    ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
+    # ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
     expected_result_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/rotate_x_30_z_90.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
     rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
-        ply_np, "Degree", 30, 0, 90
+        ply_file, "Degree", 30, 0, 90
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np, 2), np.round(expected_result, 2))
@@ -77,13 +77,20 @@ def test_rotate_ply_file_rotates_y_270_5() -> None:
     ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/model.ply"
     )
-    ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
+    # ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
     expected_result_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
         "../images/rotate_y_270_5.ply"
     )
     expected_result: NDArray[np.float_] = np.asarray(expected_result_file.points)
     rotated_cloud: o3d.cpu.pybind.geometry.PointCloud = rotate(
-        ply_np, "Degree", 0, 270.5, 0
+        ply_file, "Degree", 0, 270.5, 0
     )
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np), np.round(expected_result))
+
+
+test_rotate_ply_file_rotates_radians()
+test_rotate_ply_file_rotates_y_270_5()
+test_rotate_ply_file_rotates_z_90()
+test_rotate_ply_file_rotates_x_30()
+test_rotate_ply_file_rotates_x_30_z_90()

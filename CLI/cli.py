@@ -44,26 +44,26 @@ class Cli(ICLI):
         self.set_command(new_command)
 
     @staticmethod
-    @click.group(chain=True)
+    @click.group()
     @click.pass_context
-    @click.option(
-        "--dest",
-        type=click.Path(),
-        required=False,
-        default="",
-        help="to save the results to",
-    )
-    def entry_point(ctx: click.Context, dest: str) -> None:
-        backbone = Backbone()
+    # @click.option(
+    #     "--dest",
+    #     type=click.Path(),
+    #     required=False,
+    #     default="",
+    #     help="to save the results to",
+    # )
+    def entry_point(ctx: click.Context) -> None:
 
-        backbone.add_to_config("dest", dest)
+        # Backbone().add_to_config("src", path)
+        # Backbone().add_to_config("dest", dest)
 
-        ctx.obj = backbone
+        ctx.obj = Backbone()
 
 
 class CliFactory(IFactory):
     @staticmethod
     def create() -> Cli:
-        commands = [load, execute, setup, move, rotate, cut, patch, clear, mount]
+        commands = [rotate]
 
         return Cli(commands)

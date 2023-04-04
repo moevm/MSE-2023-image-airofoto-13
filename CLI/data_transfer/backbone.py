@@ -10,6 +10,7 @@ from functools import wraps
 from os.path import join
 
 from managers import FileManager
+from mvp import Model
 from .backbone_base import *
 from click import Command
 
@@ -46,9 +47,16 @@ class Backbone(IBackbone):
             )
 
         self.__config: Dict[str | int, Any] = dict.fromkeys(requirements)
-        self.__config["src"] = ""
+        self.__config["src"] = join(".", "images", "model.ply")
         self.__config["dest"] = ""
-        self.__config["operations"] = []
+        self.__config["operations"] = [1]
+        self.__config[1] = {
+            "type": "rotate",
+            "mode": "Degree",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+        }
 
         self.__default_config_path = join(".", "config", "config.yml")
         self.config_path = ""
@@ -119,6 +127,8 @@ class Backbone(IBackbone):
         self.__config["operations"].append(number)
 
         self.add_to_config(number, insert)
+
+        Model().task(operation, FileManager().read(self.__config["src"]), **parameters)
 
     def enqueue_default(self, operation: str) -> None:
 

@@ -23,12 +23,13 @@ class ICLI(ABC):
 
     @staticmethod
     @abstractmethod
-    def entry_point(ctx: Context, dest: str) -> None:
+    def entry_point(ctx: Context) -> None:
 
         """
         Entry point for CLI execution.
 
         :param ctx: Context from click library, needed for internal business logic and is passed automatically.
+        :param path: Path to PointCloud data file.
         :param dest: |optional| path to save result to.
         :return: None.
         """
