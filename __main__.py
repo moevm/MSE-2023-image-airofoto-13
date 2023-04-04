@@ -1,5 +1,7 @@
 #!/usr/bin/python
+
 from CLI import Cli, Backbone
+from mvp import Model
 
 
 def main() -> None:
@@ -13,9 +15,8 @@ def main() -> None:
         if error.code:
             raise
 
-    # Even after CLI finished working Backbone still holds the metadata.
-    storage = Backbone()
-    print(storage.get_config())
+    Backbone().dump_config()
+    Model().save_data("")
 
 
 if __name__ == "__main__":

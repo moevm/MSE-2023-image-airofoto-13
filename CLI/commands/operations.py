@@ -1,5 +1,7 @@
 import click
 
+from mvp import Model
+
 
 @click.command("move", short_help="Shift points along x, y and z axes")
 @click.pass_context
@@ -22,22 +24,30 @@ def move(ctx: click.Context, x: float, y: float, z: float) -> None:
 @click.command("rotate", short_help="Rotate points along x, y and z axes")
 @click.pass_context
 @click.argument(
+        "path",
+        type=click.Path(exists=True),
+        required=True,
+    )
+@click.argument(
     "mode", type=click.Choice(["Degree", "Radian"]), required=True, default="Degree"
 )
 @click.argument("x", type=float, required=True, default=0.0)
 @click.argument("y", type=float, required=True, default=0.0)
 @click.argument("z", type=float, required=True, default=0.0)
-def rotate(ctx: click.Context, mode: str, x: float, y: float, z: float) -> None:
+def rotate(ctx: click.Context, path: str, mode: str, x: float, y: float, z: float) -> None:
     """
     Rotate the point cloud by given values in Degrees/Radians along respective axes (x, y and z).
 
-    :param ctx: Context from click library, needed for internal business logic and is passed automatically.
-    :param mode: Angle units to use for rotation.
-    :param x: Value to rotate points by along the X-axis.
-    :param y: Value to rotate points by along the Y-axis.
-    :param z: Value to rotate points by along the Z-axis.
-    :return: None.
+    :param ctx: Context from click library, needed for internal business logic and is passed automatically.\n
+    :param path: Path to file containing PointCloud Data.
+    :param mode: Angle units to use for rotation (Degree/Radian).\n
+    :param x: Value to rotate points by along the X-axis.\n
+    :param y: Value to rotate points by along the Y-axis.\n
+    :param z: Value to rotate points by along the Z-axis.\n
+    :return: None.\n
     """
+
+    Model().load_data(path)
 
     ctx.obj.enqueue("rotate", {"mode": mode, "x": x, "y": y, "z": z})
 
