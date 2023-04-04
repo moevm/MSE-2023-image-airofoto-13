@@ -9,7 +9,12 @@ class Parser(IParser):
     Parser class to handle input/output from custom file formats.
     """
 
-    def __init__(self, file_format: str, reader: Callable[[str], Any], writer: Callable[[str, Any], None]):
+    def __init__(
+        self,
+        file_format: str,
+        reader: Callable[[str], Any],
+        writer: Callable[[str, Any], None],
+    ):
 
         """
         Constructor method for Parser class.

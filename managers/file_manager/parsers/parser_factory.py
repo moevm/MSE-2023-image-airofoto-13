@@ -7,12 +7,10 @@ from .parser import Parser
 
 
 class ParserFactory(IParserFactory):
-
     @staticmethod
-    def create(name: str,
-               reader: Callable[[str], Any],
-               writer: Callable[[str, Any], None]
-               ) -> Parser:
+    def create(
+        name: str, reader: Callable[[str], Any], writer: Callable[[str, Any], None]
+    ) -> Parser:
 
         return Parser(file_format=name, reader=reader, writer=writer)
 
@@ -39,11 +37,12 @@ class ParserFactory(IParserFactory):
 
             yaml.safe_dump(data, stream, sort_keys=False)
 
-        return ParserFactory.create("yml",
-                                    read_stream(yaml.safe_load),
-                                    write_stream(yml_write_wo_sorting)
-                                    )
+        return ParserFactory.create(
+            "yml", read_stream(yaml.safe_load), write_stream(yml_write_wo_sorting)
+        )
 
     @staticmethod
     def create_ply() -> Parser:
-        return ParserFactory.create("ply", o3d.io.read_point_cloud, o3d.io.write_point_cloud)
+        return ParserFactory.create(
+            "ply", o3d.io.read_point_cloud, o3d.io.write_point_cloud
+        )

@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
-from parsers import IParser, ParserFactory #  type: ignore
-from file_manager_base import IFileManager #  type: ignore
+from parsers import IParser, ParserFactory  #  type: ignore
+from file_manager_base import IFileManager  #  type: ignore
 
 
 class FileManager(IFileManager):
@@ -22,8 +22,8 @@ class FileManager(IFileManager):
         if parsers is None:
             parsers = {
                 "yml": ParserFactory.create_yml(),
-                "ply": ParserFactory.create_ply()
-                }
+                "ply": ParserFactory.create_ply(),
+            }
 
         self.__modes = parsers
 
