@@ -1,7 +1,7 @@
 from CLI import Cli, Backbone
 
 
-def main():
+def main() -> None:
     ui = Cli.create_cli()
 
     # click finishes whole execution as soon as the cli group finishes its execution.

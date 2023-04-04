@@ -37,7 +37,7 @@ class FileManager(IFileManager):
         :return: file extension (without the dot!).
         """
 
-        return path[path.rfind('.') + 1::]
+        return path[path.rfind(".") + 1 : :]
 
     @staticmethod
     def get_filename(path: str) -> int:
@@ -50,7 +50,7 @@ class FileManager(IFileManager):
         :return: index of the beginning of the file name.
         """
 
-        return path.rfind('\\') + 1
+        return path.rfind("\\") + 1
 
     def path_exists(self, path: str) -> bool:
         p = Path(path)
@@ -90,7 +90,7 @@ class FileManager(IFileManager):
         if not self.is_supported(mode):
             raise ValueError(f"{mode} file type is not supported!")
 
-        if not self.path_exists(path[:self.get_filename(path)]):
-            self.create_path(path[:self.get_filename(path)])
+        if not self.path_exists(path[: self.get_filename(path)]):
+            self.create_path(path[: self.get_filename(path)])
 
         self.__modes[mode].file_output(file_path=path, data=data)

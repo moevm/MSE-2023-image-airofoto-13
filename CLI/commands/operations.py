@@ -21,7 +21,9 @@ def move(ctx: click.Context, x: float, y: float, z: float) -> None:
 
 @click.command("rotate", short_help="Rotate points along x, y and z axes")
 @click.pass_context
-@click.argument("mode", type=click.Choice(["Degree", "Radian"]), required=True, default="Degree")
+@click.argument(
+    "mode", type=click.Choice(["Degree", "Radian"]), required=True, default="Degree"
+)
 @click.argument("x", type=float, required=True, default=0.0)
 @click.argument("y", type=float, required=True, default=0.0)
 @click.argument("z", type=float, required=True, default=0.0)
@@ -58,10 +60,13 @@ def cut(ctx: click.Context, ul: bool, ur: bool, ll: bool, lr: bool) -> None:
     :return: None.
     """
 
-    ctx.obj.enqueue("cut", {"upper-left": ul, "upper-right": ur, "lower-left": ll, "lower-right": lr})
+    ctx.obj.enqueue(
+        "cut",
+        {"upper-left": ul, "upper-right": ur, "lower-left": ll, "lower-right": lr},
+    )
 
 
-@click.command("patch", short_help="Patch \"holes\" in point cloud")
+@click.command("patch", short_help='Patch "holes" in point cloud')
 @click.pass_context
 @click.argument("degree", type=int, required=True, default=1)
 def patch(ctx: click.Context, degree: int) -> None:
@@ -97,7 +102,7 @@ def clear(ctx: click.Context, height: float, above: bool, below: bool) -> None:
 
 @click.command("mount", short_help="Georeference given image")
 @click.pass_context
-@click.argument("path", type=click.Path(exists=True), default='')
+@click.argument("path", type=click.Path(exists=True), default="")
 def mount(ctx: click.Context, path: str) -> None:
     """
     Use the source point cloud to embed geographic information into the given (GeoTIFF) image.

@@ -14,7 +14,7 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
     """
 
     @abstractmethod
-    def supported_formats(self) -> List[str]:
+    def supported_formats(self) -> list[str]:
 
         """
         Helper method to list all the file formats supported by the specific file handler.
