@@ -59,10 +59,9 @@ class IParserFactory(ABC):
 
     @staticmethod
     @abstractmethod
-    def create(name: str,
-               reader: Callable[[str], Any],
-               writer: Callable[[str, Any], None]
-               ) -> IParser:
+    def create(
+        name: str, reader: Callable[[str], Any], writer: Callable[[str, Any], None]
+    ) -> IParser:
         """
         A factory method for easy creation of parser objects.
         Needs to be overriden for each derived Parser class.
@@ -101,6 +100,7 @@ class IParserFactory(ABC):
 
 #   Compatability wrappers for Parser creation with functions requiring file stream for file access.
 
+
 def read_stream(function: Callable[[IO[str]], Any]) -> Callable[[str], Any]:
 
     """
@@ -120,7 +120,9 @@ def read_stream(function: Callable[[IO[str]], Any]) -> Callable[[str], Any]:
     return wrapper
 
 
-def write_stream(function: Callable[[IO[str], Any], None]) -> Callable[[str, Any], None]:
+def write_stream(
+    function: Callable[[IO[str], Any], None]
+) -> Callable[[str, Any], None]:
 
     """
     Parser compatability wrapper for output stream dependent functions.

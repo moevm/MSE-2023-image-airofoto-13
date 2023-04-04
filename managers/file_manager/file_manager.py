@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
-from parsers import IParser, ParserFactory #  type: ignore
-from file_manager_base import IFileManager #  type: ignore
+from parsers import IParser, ParserFactory  #  type: ignore
+from file_manager_base import IFileManager  #  type: ignore
 
 
 class FileManager(IFileManager):
