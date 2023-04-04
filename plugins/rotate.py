@@ -6,11 +6,8 @@ from typing import Any
 
 
 def rotation_matrix_func(
-    mode: str,
-    rotate_x: float,
-    rotate_y: float,
-    rotate_z: float
-    ) -> ndarray[Any, dtype[Any]]:
+    mode: str, rotate_x: float, rotate_y: float, rotate_z: float
+) -> ndarray[Any, dtype[Any]]:
 
     radians: dict[str, float] = {"x": rotate_x, "y": rotate_y, "z": rotate_z}
 
@@ -53,7 +50,7 @@ def rotate(
     x: float,
     y: float,
     z: float,
-    ) -> o3d.geometry.PointCloud:
+) -> o3d.geometry.PointCloud:
 
     """
     Rotation transformation plugin.

@@ -24,17 +24,19 @@ def move(ctx: click.Context, x: float, y: float, z: float) -> None:
 @click.command("rotate", short_help="Rotate points along x, y and z axes")
 @click.pass_context
 @click.argument(
-        "path",
-        type=click.Path(exists=True),
-        required=True,
-    )
+    "path",
+    type=click.Path(exists=True),
+    required=True,
+)
 @click.argument(
     "mode", type=click.Choice(["Degree", "Radian"]), required=True, default="Degree"
 )
 @click.argument("x", type=float, required=True, default=0.0)
 @click.argument("y", type=float, required=True, default=0.0)
 @click.argument("z", type=float, required=True, default=0.0)
-def rotate(ctx: click.Context, path: str, mode: str, x: float, y: float, z: float) -> None:
+def rotate(
+    ctx: click.Context, path: str, mode: str, x: float, y: float, z: float
+) -> None:
     """
     Rotate the point cloud by given values in Degrees/Radians along respective axes (x, y and z).
 

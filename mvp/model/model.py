@@ -1,13 +1,12 @@
 from typing import List, Any, Dict, Optional
 from os.path import join
-import open3d # type: ignore
+import open3d  # type: ignore
 
 from .model_base import IModel
 from managers import PluginRegistry, FileManager, PluginInfo
 
 
 class Model(IModel):
-
     def __init__(self, registry: Optional[PluginRegistry] = None):
 
         if registry is None:
@@ -20,7 +19,7 @@ class Model(IModel):
 
         self.__output_name = join(".", "output.ply")
 
-        self.__data : open3d.geometry.PointCloud | None = None
+        self.__data: open3d.geometry.PointCloud | None = None
 
     def receive(self, result: open3d.geometry.PointCloud) -> None:
         self.__data = result

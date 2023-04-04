@@ -11,7 +11,6 @@ class IModel(ITarget, metaclass=EmbedSingleton):
     Interface for Model object from MVP pattern. Defines the essential data management and processing logic.
     """
 
-
     @abstractmethod
     def load_data(self, path: str) -> None:
         """

@@ -88,6 +88,7 @@ def test_rotate_ply_file_rotates_y_270_5() -> None:
     rotated_np: NDArray[np.float_] = np.asarray(rotated_cloud.points)
     assert np.array_equal(np.round(rotated_np), np.round(expected_result))
 
+
 test_rotate_ply_file_rotates_radians()
 test_rotate_ply_file_rotates_y_270_5()
 test_rotate_ply_file_rotates_z_90()
