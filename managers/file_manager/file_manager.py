@@ -22,8 +22,8 @@ class FileManager(IFileManager):
         if parsers is None:
             parsers = {
                 "yml": ParserFactory.create_yml(),
-                "ply": ParserFactory.create_ply()
-                }
+                "ply": ParserFactory.create_ply(),
+            }
 
         self.__modes = parsers
 
