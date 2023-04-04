@@ -1,6 +1,7 @@
-from typing import List
+from abc import ABC, abstractmethod
+from typing import List, Any
 
-from framework import *
+from framework import EmbedSingleton
 
 
 class IFileManager(ABC, metaclass=EmbedSingleton):
@@ -60,7 +61,7 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         pass
 
     @abstractmethod
-    def read(self, path: str):
+    def read(self, path: str) -> Any:
 
         """
         Extract data from file of supported format.
@@ -74,7 +75,7 @@ class IFileManager(ABC, metaclass=EmbedSingleton):
         pass
 
     @abstractmethod
-    def write(self, path: str, data: any) -> None:
+    def write(self, path: str, data: Any) -> None:
 
         """
         Output data to file along the given path. Creates the file if it doesn't exist.

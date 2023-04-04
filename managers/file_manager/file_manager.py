@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List, Optional, Any
 
-from .parsers import *
-from .file_manager_base import *
+from parsers import IParser, ParserFactory #  type: ignore
+from file_manager_base import IFileManager #  type: ignore
 
 
 class FileManager(IFileManager):
@@ -11,7 +11,7 @@ class FileManager(IFileManager):
     Generic file handler class.
     """
 
-    def __init__(self, parsers: Dict[str, IParser] = None):
+    def __init__(self, parsers: Optional[Dict[str, IParser]] = None):
 
         """
         Constructor method for FileManager class objects.
@@ -20,8 +20,10 @@ class FileManager(IFileManager):
         """
 
         if parsers is None:
-            # TODO ensure dynamic parser loading from parser directory.
-            parsers = {"yml": YmlParser.create_parser()}
+            parsers = {
+                "yml": ParserFactory.create_yml(),
+                "ply": ParserFactory.create_ply()
+                }
 
         self.__modes = parsers
 
@@ -71,7 +73,7 @@ class FileManager(IFileManager):
 
         return False
 
-    def read(self, path: str) -> any:
+    def read(self, path: str) -> Any:
         mode = FileManager.get_format(path)
 
         if not self.is_supported(mode):
@@ -82,7 +84,7 @@ class FileManager(IFileManager):
 
         return self.__modes[mode].file_input(path)
 
-    def write(self, path: str, data: any) -> None:
+    def write(self, path: str, data: Any) -> None:
         mode = FileManager.get_format(path)
 
         if not self.is_supported(mode):
