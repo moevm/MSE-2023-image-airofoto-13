@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, Any, Tuple, List
+from typing import Dict, Any, List
 
 from framework import ITarget, EmbedSingleton
 from managers import PluginInfo

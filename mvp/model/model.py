@@ -38,4 +38,4 @@ class Model(IModel):
         return self.__operations.get_info(name)
 
     def supported_operations(self) -> List[str]:
-        return self.__operations.supported_plugins()
+        return self.__operations.supported_plugins() if self.__operations.supported_plugins() else []
