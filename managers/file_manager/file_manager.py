@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, List, Optional, Any
 
-from .parsers import IParser, YmlParser
-from .file_manager_base import *
+from .parsers import IParser, ParserFactory
+from .file_manager_base import IFileManager
 
 
 class FileManager(IFileManager):
@@ -20,8 +20,10 @@ class FileManager(IFileManager):
         """
 
         if parsers is None:
-            # TODO ensure dynamic parser loading from parser directory.
-            parsers = {"yml": YmlParser.create_parser()}
+            parsers = {
+                "yml": ParserFactory.create_yml(),
+                "ply": ParserFactory.create_ply(),
+            }
 
         self.__modes = parsers
 
@@ -38,7 +40,7 @@ class FileManager(IFileManager):
         return path[path.rfind(".") + 1 : :]
 
     @staticmethod
-    def get_filename(path: str) -> int:
+    def get_file_location(path: str) -> str:
 
         """
         Helper method to determine the index of the beginning of file name.
@@ -48,7 +50,7 @@ class FileManager(IFileManager):
         :return: index of the beginning of the file name.
         """
 
-        return path.rfind("\\") + 1
+        return str(Path(path).parent)
 
     def path_exists(self, path: str) -> bool:
         p = Path(path)
@@ -88,7 +90,7 @@ class FileManager(IFileManager):
         if not self.is_supported(mode):
             raise ValueError(f"{mode} file type is not supported!")
 
-        if not self.path_exists(path[: self.get_filename(path)]):
-            self.create_path(path[: self.get_filename(path)])
+        if not self.path_exists(self.get_file_location(path)):
+            self.create_path(self.get_file_location(path))
 
         self.__modes[mode].file_output(file_path=path, data=data)

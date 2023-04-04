@@ -7,6 +7,7 @@ from typing import (
     TypeVar,
 )
 from functools import wraps
+from os.path import join
 
 from managers import FileManager
 from .backbone_base import *
@@ -49,7 +50,7 @@ class Backbone(IBackbone):
         self.__config["dest"] = ""
         self.__config["operations"] = []
 
-        self.__default_config_path = ".\\config\\config.yml"
+        self.__default_config_path = join(".", "config", "config.yml")
         self.config_path = ""
 
         self.commands: dict[str, Command] = {}
