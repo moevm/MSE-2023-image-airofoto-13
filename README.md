@@ -1,3 +1,15 @@
+# Airofoto
+
+## Сборка проекта
+```shell
+docker-compose build
+```
+
+## Запуск проекта
+```shell
+docker run -it -v $PWD:/io airofoto-airofoto
+```
+
 # MSE-2023-template
 Шаблонный проект для гитхаба на курсе Промышленная разработка ПО
 

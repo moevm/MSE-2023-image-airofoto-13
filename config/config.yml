@@ -1,0 +1,10 @@
+src: .\images\model.ply
+dest: ''
+operations:
+- 1
+1:
+  type: rotate
+  mode: Degree
+  x: 0.0
+  y: 0.0
+  z: 0.0

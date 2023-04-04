@@ -1,0 +1,25 @@
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.10.10
+          cache: 'pip'
+      - run: pip install --upgrade pip
+      - run: pip install black==22.10.0
+      - run: black $(git ls-files '*.py')
+      - uses: EndBug/add-and-commit@v4
+        with:
+          author_name: ${{ github.actor }}
+          author_email: ${{ github.actor }}@users.noreply.github.com
+          add: "-u ."
+          push: "--force"
+          commit: "--amend --no-edit"
+          branch: ${{ github.ref }}
