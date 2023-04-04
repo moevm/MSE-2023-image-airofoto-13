@@ -94,9 +94,3 @@ class FileManager(IFileManager):
             self.create_path(path[: self.get_filename(path)])
 
         self.__modes[mode].file_output(file_path=path, data=data)
-
-
-conf = FileManager().read("../../config/config.yml")
-FileManager().write("../../config/conf.yml", conf)
-m1 = FileManager().read("../../images/model.ply")
-FileManager().write("./mod.ply", m1)
