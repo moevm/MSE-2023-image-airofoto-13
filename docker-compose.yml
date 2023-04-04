@@ -1,0 +1,9 @@
+version: "3.9"
+
+name: airofoto
+
+services:
+  airofoto:
+    container_name: airofoto
+    build: 
+      context: .

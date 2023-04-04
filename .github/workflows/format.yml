@@ -1,4 +1,7 @@
-on: [push]
+on:
+  pull_request:
+    branches:
+      - dev
 
 jobs:
   format:
@@ -8,13 +11,15 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: 3.10.10
+          cache: 'pip'
       - run: pip install --upgrade pip
-      - run: pip install -r requirements.txt
+      - run: pip install black==22.10.0
       - run: black $(git ls-files '*.py')
       - uses: EndBug/add-and-commit@v4
         with:
           author_name: ${{ github.actor }}
           author_email: ${{ github.actor }}@users.noreply.github.com
-          message: "Format code with black"
           add: "-u ."
+          push: "--force"
+          commit: "--amend --no-edit"
           branch: ${{ github.ref }}

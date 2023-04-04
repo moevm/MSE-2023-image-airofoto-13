@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from CLI import Cli, Backbone
 
 
