@@ -1,4 +1,5 @@
-from framework import *
+from abc import ABC, abstractmethod
+from typing import Any, Callable, IO
 
 
 class IParser(ABC):
@@ -9,19 +10,6 @@ class IParser(ABC):
 
     Parsers are building blocks for the FileManager, responsible for handling any file operation.
     """
-
-    @classmethod
-    @abstractmethod
-    def create_parser(cls):
-
-        """
-        A factory method for easy creation of parser objects.
-        Needs to be overriden for each derived Parser class.
-
-        :return: A specific Parser object.
-        """
-
-        pass
 
     @abstractmethod
     def supported_format(self) -> str:
@@ -35,7 +23,7 @@ class IParser(ABC):
         pass
 
     @abstractmethod
-    def file_input(self, file_path: str):
+    def file_input(self, file_path: str) -> Any:
 
         """
         Method to read from file along the given path.
@@ -49,7 +37,7 @@ class IParser(ABC):
         pass
 
     @abstractmethod
-    def file_output(self, file_path: str, data: any) -> None:
+    def file_output(self, file_path: str, data: Any) -> None:
         """
         Method to write to the file along the given path.
 
@@ -62,3 +50,88 @@ class IParser(ABC):
 
         pass
 
+
+class IParserFactory(ABC):
+
+    """
+    A Factory class for IParser instances.
+    """
+
+    @staticmethod
+    @abstractmethod
+    def create(name: str,
+               reader: Callable[[str], Any],
+               writer: Callable[[str, Any], None]
+               ) -> IParser:
+        """
+        A factory method for easy creation of parser objects.
+        Needs to be overriden for each derived Parser class.
+
+        :param name: file format.
+        :param reader: function to read from specified file.
+        :param writer: function to write to specified file.
+
+        :return: A configured IParser instance.
+        """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def create_yml() -> IParser:
+        """
+        Returns a .yml file oriented IParser instance.
+
+        :return: IParser
+        """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def create_ply() -> IParser:
+        """
+        Returns a .ply file oriented IParser instance.
+
+        :return: IParser
+        """
+
+        pass
+
+
+#   Compatability wrappers for Parser creation with functions requiring file stream for file access.
+
+def read_stream(function: Callable[[IO[str]], Any]) -> Callable[[str], Any]:
+
+    """
+    Parser compatability wrapper for input stream dependent functions.
+
+    :param function: input function, requiring file stream.
+    :return: wrapped Parser compatible function
+    """
+
+    def wrapper(path: str) -> Any:
+
+        with open(path, "r") as source:
+            data = function(source)
+
+        return data
+
+    return wrapper
+
+
+def write_stream(function: Callable[[IO[str], Any], None]) -> Callable[[str, Any], None]:
+
+    """
+    Parser compatability wrapper for output stream dependent functions.
+
+    :param function: output function, requiring file stream.
+    :return: wrapped Parser compatible function
+    """
+
+    def wrapper(path: str, data: Any) -> None:
+
+        with open(path, "w") as source:
+            function(source, data)
+
+    return wrapper
