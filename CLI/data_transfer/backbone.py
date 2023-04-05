@@ -178,6 +178,9 @@ class Backbone(IBackbone):
         if not path:
             path = self.get_config_path()
 
+        if not self.__config["operations"]:
+            self.enqueue("rotate", {"mode": "Degree", "x": 0.0, "y": 0.0, "z": 0.0})
+
         self.__file.write(path=path, data=self.__config)
 
 

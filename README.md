@@ -1,14 +1,37 @@
 # Airofoto
 
 ## Сборка проекта
+
 ```shell
 docker-compose build
 ```
 
 ## Запуск проекта
+
 ```shell
-docker run -it -v $PWD:/io airofoto-airofoto
+docker run -it -v $PWD:/io airofoto-airofoto <аргументы>
 ```
+
+Список доступных команд выводится ключем *--help*. При указании конкретной команды можно узнать способ её использования.
+
+## Запуск тестов
+
+```shell
+docker run  -it --entrypoint "pytest" --workdir "/usr/src/app/tests"  airofoto-airofoto
+```
+
+## Проверка фич 
+
+Предварительно нужно скопировать файл *model.ply* из папки *images* в текущую папку ($PWD)
+
+### Поворот модели
+
+```shell
+docker run -it -v /tmp/io:/io airofoto-airofoto rotate model.ply Degree 30 0 90
+```
+
+Получившийся файл *$PWD/output.ply* должен совпадать с файлом *rotate_x_30_z_90.ply* из папки *images*.
+Можно проверить другие модели 
 
 # MSE-2023-template
 Шаблонный проект для гитхаба на курсе Промышленная разработка ПО
