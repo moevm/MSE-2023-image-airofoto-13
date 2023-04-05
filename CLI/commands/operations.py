@@ -49,6 +49,7 @@ def rotate(
     :return: None.\n
     """
 
+    ctx.obj.add_to_config("src", path)
     Model().load_data(path)
 
     ctx.obj.enqueue("rotate", {"mode": mode, "x": x, "y": y, "z": z})
