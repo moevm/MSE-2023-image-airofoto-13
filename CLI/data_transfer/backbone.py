@@ -49,7 +49,14 @@ class Backbone(IBackbone):
         self.__config: Dict[str | int, Any] = dict.fromkeys(requirements)
         self.__config["src"] = join(".", "images", "model.ply")
         self.__config["dest"] = ""
-        self.__config["operations"] = []
+        self.__config["operations"] = [1]
+        self.__config[1] = {
+            "type": "rotate",
+            "mode": "Degree",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0,
+        }
 
         self.__default_config_path = join(".", "config", "config.yml")
         self.config_path = ""
