@@ -6,43 +6,36 @@ from numpy import ndarray, dtype, float_
 from typing import Any, Tuple, List
 
 
-def filter_point_cloud_by_height(
-    point_cloud: ndarray[Any, dtype[Any]],
-    colors_of_pc: ndarray[Any, dtype[Any]],
-    min_height: float,
-    max_height: float,
+def clear(
+    data: o3d.geometry.PointCloud,
+    height: float,
+    above: bool,
+    below: bool
 ) -> Tuple[Any, List[Any]]:
     result: list[Any] = []
     colors: list[Any] = []
+    
+    pc_np: NDArray[float_] = np.asarray(data.points)
+    np_colors: NDArray[float_] = np.asarray(data.colors)
 
-    for point, color in zip(point_cloud, colors_of_pc):
-        if min_height <= np.array(point)[2] <= max_height:
-            new_point = np.array(point)
-            colors.append(color)
-            result.append(new_point)
+    for point, color in zip(pc_np, np_colors):
+        if (above):
+            if height <= np.array(point)[2]:
+                new_point = np.array(point)
+                colors.append(color)
+                result.append(new_point)
+        elif (below):
+            if height >= np.array(point)[2]:
+                new_point = np.array(point)
+                colors.append(color)
+                result.append(new_point)
 
     result_cloud = (
         o3d.geometry.PointCloud()
     )  
     result_cloud.points = o3d.utility.Vector3dVector(
         result
-    ) 
+    )
 
     return result_cloud, colors
 
-
-if __name__ == "__main__":
-    input_file: str = input()
-    min_height: float = float(input())
-    max_height: float = float(input())
-    pc: o3d.geometry.PointCloud = o3d.io.read_point_cloud(input_file)
-    pc_np: NDArray[float_] = np.asarray(pc.points)
-    np_colors: NDArray[float_] = np.asarray(pc.colors)
-    new: Tuple[Any, List[Any]] = filter_point_cloud_by_height(
-        pc_np, np_colors, min_height, max_height
-    )
-    new_file = new[0]
-    new_colors = new[1]
-    new_file.colors = o3d.utility.Vector3dVector(new_colors)
-    o3d.io.write_point_cloud("filtered_file.ply", new_file)
-    o3d.visualization.draw_geometries([new_file])
