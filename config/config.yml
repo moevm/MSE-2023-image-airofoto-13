@@ -8,3 +8,9 @@ operations:
   x: 0.0
   y: 0.0
   z: 0.0
+
+2:
+  type: clear
+  height: 0.0
+  above: false
+  below: false  
