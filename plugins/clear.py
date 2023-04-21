@@ -2,13 +2,13 @@ import numpy as np
 import open3d as o3d  # type: ignore
 from numpy.typing import NDArray
 
-from numpy import ndarray, dtype, float_
-from typing import Any, Tuple, List
+from numpy import float_
+from typing import Any
 
 
 def clear(
     data: o3d.geometry.PointCloud, height: float, above: bool, below: bool
-) -> Tuple[Any, List[Any]]:
+) -> o3d.geometry.PointCloud:
     result: list[Any] = []
     colors: list[Any] = []
 
@@ -27,7 +27,8 @@ def clear(
                 colors.append(color)
                 result.append(new_point)
 
-    result_cloud = o3d.geometry.PointCloud()
+    result_cloud: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
     result_cloud.points = o3d.utility.Vector3dVector(result)
+    result_cloud.colors = o3d.utility.Vector3dVector(colors)
 
-    return result_cloud, colors
+    return result_cloud
