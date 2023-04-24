@@ -9,26 +9,24 @@ from typing import Any
 def clear(
     data: o3d.geometry.PointCloud, height: float, above: bool, below: bool
 ) -> o3d.geometry.PointCloud:
-    result: list[Any] = []
-    colors: list[Any] = []
 
     pc_np: NDArray[float_] = np.asarray(data.points)
     np_colors: NDArray[float_] = np.asarray(data.colors)
 
-    for point, color in zip(pc_np, np_colors):
-        if above:
-            if height <= np.array(point)[2]:
-                new_point = np.array(point)
-                colors.append(color)
-                result.append(new_point)
-        elif below:
-            if height >= np.array(point)[2]:
-                new_point = np.array(point)
-                colors.append(color)
-                result.append(new_point)
+    if (above == below):
+        raise Exception('Модель не будет изменена при равных значениях параметров above и below')
+
+    if (above):
+        mask: list[bool] = np.where(pc_np[:, 2] <= height, True, False)
+
+    elif (below):
+        mask: list[bool] = np.where(pc_np[:, 2] >= height, True, False)  
 
     result_cloud: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
-    result_cloud.points = o3d.utility.Vector3dVector(result)
-    result_cloud.colors = o3d.utility.Vector3dVector(colors)
+    result_cloud.points = o3d.utility.Vector3dVector(pc_np[mask])
+    result_cloud.colors = o3d.utility.Vector3dVector(np_colors[mask])  
+    result_cloud.estimate_covariances()
+    result_cloud.estimate_normals()
 
     return result_cloud
+
