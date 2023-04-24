@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 import open3d as o3d  # type: ignore
-from cropping_at_the_adges import cropping_by_cycle as crop
+from cropping_at_the_edges import cropping_by_cycle as crop
 
 ply_file: o3d.cpu.pybind.geometry.PointCloud = o3d.io.read_point_cloud(
     "../images/model.ply"
