@@ -5,8 +5,6 @@ from numpy.typing import NDArray
 from typing import Any
 
 
-def visualization(
-     point_cloud: o3d.geometry.PointCloud
-) -> None:
+def visualization(point_cloud: o3d.geometry.PointCloud) -> None:
     o3d.io.write_point_cloud("new_file.ply", point_cloud)
     o3d.visualization.draw_geometries([point_cloud])
