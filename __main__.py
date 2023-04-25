@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-from CLI import Cli, Backbone
+from CLI import CLIBuilder, Backbone
 from mvp import Model
 
 
 def main() -> None:
-    ui = Cli.create_cli()
+    ui = CLIBuilder.build_cli()
 
     # click finishes whole execution as soon as the cli group finishes its execution.
     # The try-except block below prevents that from happening.
@@ -15,8 +15,7 @@ def main() -> None:
         if error.code:
             raise
 
-    Backbone().dump_config()
-    Model().save_data("")
+    print(ui.get_backbone().generate_config())
 
 
 if __name__ == "__main__":
