@@ -1,58 +1,133 @@
-from click import Command, Context
-from inspect import Signature
 from abc import ABC, abstractmethod
+from typing import Any, Callable, Dict, Optional
 
-from CLI.data_transfer import Backbone
+from click import Command, Context, group, option, pass_context, Path
+
+from CLI.commands import IConsoleCommandFactory
+from CLI.data_transfer import IBackbone
 
 
 class ICLI(ABC):
 
-    """
-    Interface for CLI class.
-    Declares basic modular CLI functionality: adding and generating commands and entry point for CLI execution.
-    """
-
-    @classmethod
     @abstractmethod
-    def create_cli(cls) -> "ICLI":
-        """
-        Factory method for easy CLI objects creation.
+    def attach_command(self, command: Command) -> None:
 
-        :return: CLI object.
         """
+        Adds given command to CLI instance's invokable commands.
+
+        :param command: click.Command instance.
+        :return: None.
+        """
+
+        pass
+
+    @abstractmethod
+    def attach_plugin(self, name: str, package: str) -> None:
+
+        """
+        Generates the console representation for given plugin and
+        adds it to invokable commands of the current CLI instance.
+
+        :param name: Name of the .py file containing the plugin (also the name of the target function inside the file).
+        :param package: Python package, where the plugin is located.
+        :return: None.
+        """
+
+        pass
+
+    @abstractmethod
+    def generate_command(self, function: Callable[[...], Any]) -> None:
+
+        """
+        Generates command from a given function and adds it to invokable commands of current CLI instance.
+
+        :param function: Callable object.
+        :return: None.
+        """
+
+        pass
+
+    @abstractmethod
+    def get_backbone(self) -> IBackbone:
+
+        """
+        Returns current CLI's DTO - IBackbone instance.
+
+        :return: IBackbone instance.
+        """
+
+        pass
 
     @staticmethod
     @abstractmethod
-    def entry_point(ctx: Context) -> None:
+    @group(chain=True)
+    @pass_context
+    @option("--path", "--p", type=Path(exists=True), help="Path to the source data .ply file.")
+    @option("--dest", "--d", type=Path(exists=False), help="Path to save the program output to.")
+    def entry_point(ctx: Context, path: Optional[str] = None, dest: Optional[str] = None) -> None:
 
         """
-        Entry point for CLI execution.
+        Entry point for the command line interface.
 
-        :param ctx: Context from click library, needed for internal business logic and is passed automatically.
-        :param path: Path to PointCloud data file.
-        :param dest: |optional| path to save result to.
-        :return: None.
+        :param ctx: click.Context object. Should be passed automatically via @click.pass_context decorator.
+        :param path: Path to source .ply file.
+        :param dest: Path to save output file to.
+        :return: None
         """
 
+        pass
+
+
+class ICLIBuilder(ABC):
+
+    """
+    Builder class for CLI.
+    """
+
+    @staticmethod
     @abstractmethod
-    def set_command(self, backbone: Backbone, command: Command) -> None:
+    def get_commands() -> Dict[str, Command]:
 
         """
-        Helper method to add command to current CLI. Invoked during CLI object initialization.
+        Returns a dictionary of plugins in specified directory.
 
-        :param backbone: business object, storing all the necessary CLI meta information,
-        including the dictionary of supported commands.
-        :param command: Click.Command object to add to current CLI.
-        :return: None.
+        :return: Dict with loaded plugins.
         """
 
+        pass
+
+    @staticmethod
     @abstractmethod
-    def generate_command(self, name: str, args: Signature) -> None:
+    def build_command_factory() -> IConsoleCommandFactory:
 
         """
-        Creates a click.Command from given signature with a given name and adds it to the current CLI.
+        Returns a Command serialization factory for CLI.
 
-        :param name: name of the command.
-        :param args: signature object, containing desired parameters for command.
-        :return: None.
+        :return:
         """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def build_backbone() -> IBackbone:
+
+        """
+        Returns an IBackbone instance.
+
+        :return: IBackbone.
+        """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def build_cli() -> ICLI:
+
+        """
+        Creates a fully functional CLI instance.
+
+        :return: ICLI instance.
+        """
+
+        pass

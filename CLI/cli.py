@@ -1,69 +1,87 @@
-from click import Argument, Command
+from typing import Any, Dict, Callable, Optional, TypeVar
+
 import click
-from inspect import Signature
 
 from CLI.cli_base import ICLI
-from framework import IFactory
-from CLI.commands import load, execute, setup, move, rotate, cut, patch, clear, mount
-from CLI.data_transfer import Backbone, pass_backbone
+from .commands import IConsoleCommandFactory
+from CLI.data_transfer import IBackbone
 
-__all__ = ["CliFactory", "ICLI", "Cli"]
+__all__ = ["CLI"]
 
 
-class Cli(ICLI):
-    def __init__(self, commands: list[Command]):
+BackboneReturnType = TypeVar("BackboneReturnType")
+
+
+class CLI(ICLI):
+
+    _backbone = None
+
+    def __init__(self,
+                 commands: Dict[str, click.Command],
+                 command_factory: IConsoleCommandFactory,
+                 backbone: IBackbone
+                 ) -> None:
+
+        self._commands = {}
+        self._builder = command_factory
+        CLI._backbone = backbone
 
         for command in commands:
-            self.set_command(command)
+            self.attach_command(commands[command])
 
-    @classmethod
-    def create_cli(cls) -> "Cli":
-        return CliFactory.create()
+    def attach_command(self, command: click.Command) -> None:
+        self.entry_point.add_command(command, command.name)
+        self._commands[command.name] = command
 
-    @pass_backbone
-    def set_command(self, backbone: Backbone, command: Command) -> None:
-        if command.name:
-            backbone.commands[command.name] = command
-            self.entry_point.add_command(command, command.name)
-        else:
-            raise KeyError("Command with empty name provided")
+    def attach_plugin(self, name: str, package: str) -> None:
 
-    def generate_command(self, name: str, args: Signature) -> None:
-        new_command = Command(name=name)
+        self.attach_command(self._builder.create_from_plugin(name, package))
 
-        for arg in args.parameters:
-            new_command.params.append(
-                Argument(
-                    arg,
-                    required=True,
-                    type=args.parameters[arg].annotation,
-                    default=args.parameters[arg].default,
-                )
-            )
+    def generate_command(self, function: Callable[[...], Any]) -> None:
 
-        self.set_command(new_command)
+        self.attach_command(self._builder.create_from_function(function))
+
+    def get_backbone(self) -> IBackbone:
+
+        return CLI._backbone
 
     @staticmethod
-    @click.group()
+    @click.group(chain=True)
     @click.pass_context
-    # @click.option(
-    #     "--dest",
-    #     type=click.Path(),
-    #     required=False,
-    #     default="",
-    #     help="to save the results to",
-    # )
-    def entry_point(ctx: click.Context) -> None:
+    @click.option("--path", "--p", type=click.Path(exists=True), help="Path to the source data .ply file.")
+    @click.option("--dest", "--d" , type=click.Path(), help="Path to save the program output to.")
+    def entry_point(ctx: click.Context, path: Optional[str] = None, dest: Optional[str] = None) -> None:
 
-        # Backbone().add_to_config("src", path)
-        # Backbone().add_to_config("dest", dest)
+        ctx.obj = CLI._backbone
 
-        ctx.obj = Backbone()
+        ctx.obj.set_source(path)
+        ctx.obj.set_destination(dest)
 
 
-class CliFactory(IFactory):
-    @staticmethod
-    def create() -> Cli:
-        commands = [rotate]
+@CLI.entry_point.command()
+@click.pass_context
+@click.argument("path", type=click.Path(exists=True), required=True)
+def load(ctx: click.Context, path: str) -> None:
 
-        return Cli(commands)
+    """
+    Load config from .yml file located at the specified path.
+
+    :param path: Path to config file.
+    :return: None.
+    """
+
+    ctx.obj.load_config(path)
+
+@CLI.entry_point.command()
+@click.pass_context
+@click.argument("path", type=click.Path(exists=False), required=True)
+def dump(ctx: click.Context, path: str) -> None:
+
+    """
+    Dumps config to the specified location
+
+    :param path: Path to save config file to.
+    :return: None.
+    """
+
+    ctx.obj.dump_config(path)
