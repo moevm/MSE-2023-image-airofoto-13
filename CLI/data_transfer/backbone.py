@@ -1,209 +1,140 @@
 from typing import (
     Any,
     List,
-    Callable,
     Optional,
     Dict,
     TypeVar,
 )
-from functools import wraps
 from os.path import join
 
+import click
+
+from .backbone_base import IBackbone
 from managers import FileManager
-from mvp import Model
-from .backbone_base import *
-from click import Command
 
 
 BackboneCallableReturnType = TypeVar("BackboneCallableReturnType")
 
 
+def save_to_backbone(ctx: click.Context, data: Dict[str, Any]) -> None:
+    """
+    Saves data from CLI command to Backbone instance inside click.Context object.
+
+    :raises: TypeError: if click.Context's attribute 'obj' is not of type 'Backbone'
+
+    :param: ctx: click.Context with attribute obj set to IBackbone instance.
+    :param data: Dictionary of data to store in Backbone.
+    :return: None
+    """
+
+    if type(ctx.obj) != Backbone:
+        raise TypeError(f"Context object is not an IBackbone instance! ({type(ctx.obj)})")
+
+    ctx.obj.enqueue(data)
+
 class Backbone(IBackbone):
 
-    """
-    Business object class to store and process CLI data. Main objectives: configuration file handling and cli-command
-    meta-data storage.
+    def __init__(self, requirements: Optional[List[str]] = None) -> None:
 
-    Utilizes Singleton pattern, so there can only be one instance of Backbone class at any time.
-    """
+        # default paths
+        self.__default_config_path: str = join(".", "config", "config.yml")
+        self.__default_data_path: str = join(".", "images", "model.ply")
+        self.__default_output_path: str = join(".", "output.ply")
 
-    def __init__(self, requirements: Optional[List[str]] = None):
+        # config requirements
+        minimal_requirements = ["src", "dest", "operations"]
 
-        """
-        Constructor method for Backbone class.
+        self._requirements = minimal_requirements
 
-        Due to Singleton pattern architecture acts as a global access point. In other words the class object is
-        being initialized only the first time this method is called.
+        if requirements is not None:
+            if minimal_requirements in requirements:
+                self._requirements = requirements
+            else:
+                raise ValueError(f"Custom requirements should contain the minimal ones: {minimal_requirements}")
 
-        :param requirements: Configuration file requirements to enforce.
-        """
+        # config body
+        self._src: str = ""
+        self._dest: str = ""
+        self._operation_queue: List[int] = []
+        self._operations: Dict[int , Dict[str, Any]] = {}
 
-        if not requirements:
-            requirements = Backbone.get_minimal_requirements()
+    def set_source(self, path: str) -> None:
+        self._src = path
 
-        if not Backbone.check_keys(requirements):
-            raise ValueError(
-                f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed."
-            )
+    def get_source(self) -> str:
+        if self._src:
+            return self._src
 
-        self.__config: Dict[str | int, Any] = dict.fromkeys(requirements)
-        self.__config["src"] = join(".", "images", "model.ply")
-        self.__config["dest"] = ""
-        self.__config["operations"] = [1]
-        self.__config[1] = {
-            "type": "rotate",
-            "mode": "Degree",
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0,
-        }
+        return self.__default_data_path
 
-        self.__default_config_path = join(".", "config", "config.yml")
-        self.config_path = ""
+    def set_destination(self, path: str) -> None:
+        self._dest = path
 
-        self.commands: dict[str, Command] = {}
+    def get_destination(self) -> str:
+        return self._dest
 
-        self.__file = FileManager()
+    def get_requirements(self) -> List[str]:
+        return self._requirements
 
-    @staticmethod
-    def get_minimal_requirements() -> List[str]:
+    def valid_config(self, config: Dict[str | int, Any]) -> bool:
 
-        """
-        Hardcoded minimal requirements for configuration file.
-
-        :return: List of string keys for the __config dictionary.
-        """
-
-        return ["src", "dest", "operations"]
-
-    @staticmethod
-    def check_keys(keys: List[str]) -> bool:
-
-        """
-        Method enforcing the minimal requirements for configuration file.
-
-        :param keys: parameters to be checked.
-        :return: boolean check result.
-        """
-
-        minimal_requirements = Backbone.get_minimal_requirements()
-
-        for requirement in minimal_requirements:
-            if requirement not in keys:
+        for requirement in self._requirements:
+            if requirement not in config:
                 return False
 
         return True
 
-    def get_config_path(self) -> str:
+    def generate_config(self) -> Dict[str | int, Any]:
 
-        """
-        Helper method to handle configuration file pathfinding.
+        config: Dict[str | int, Any] = {"src": self.get_source(),
+                                        "dest": self.get_destination(),
+                                        "operations": self._operation_queue}
 
-        :return: Either user-provided path or the hardcoded default one.
-        """
+        for operation in self._operation_queue:
+            config[operation] = self._operations[operation]
 
-        if not self.config_path:
-            return self.__default_config_path
-
-        return self.config_path
-
-    def add_to_config(self, key: int | str, value: Any) -> None:
-        self.__config[key] = value
-
-    def get_from_config(self, key: str) -> Any:
-        if key not in self.__config:
-            raise ValueError(f"{key} not found in config!")
-
-    def enqueue(self, operation: str, parameters: Dict[str, Any]) -> None:
-
-        if operation not in self.commands:
-            raise ValueError(f"{operation} is not supported!")
-
-        insert = {"type": operation}
-        insert.update(parameters)
-
-        number = len(self.__config["operations"]) + 1
-
-        self.__config["operations"].append(number)
-
-        self.add_to_config(number, insert)
-
-        Model().task(operation, FileManager().read(self.__config["src"]), **parameters)
-
-    def enqueue_default(self, operation: str) -> None:
-
-        if operation not in self.commands:
-            raise ValueError(f"{operation} is not supported!")
-
-        params: dict[str, Any] = {"type": operation}
-
-        for arg in self.commands[operation].params:
-            if arg.name:
-                params[arg.name] = arg.default
-            else:
-                raise KeyError("No argument name provided")
-
-        number = len(self.__config["operations"]) + 1
-
-        self.__config["operations"].append(number)
-
-        self.add_to_config(number, params)
-
-    def set_config(self, config: Dict[str, Any]) -> None:
-        if not Backbone.check_keys(list(config.keys())):
-            raise ValueError(
-                f"Minimal requirements are not met! {Backbone.get_minimal_requirements()} are needed."
-            )
-
-        self.__config["src"] = config["src"]
-        self.__config["dest"] = config["dest"]
-
-        self.__config["operations"] = config["operations"]
-
-        for operation in self.__config["operations"]:
-            self.__config[operation] = config[operation]
-
-    def get_config(self) -> Dict[str | int, Any]:
-        return self.__config
+        return config
 
     def load_config(self, path: Optional[str] = None) -> None:
-        if not path:
-            path = self.get_config_path()
 
-        configuration = self.__file.read(path)
+        config: Dict[str | int, Any] = {}
 
-        self.set_config(configuration)
+        if path is not None:
+
+            if FileManager().path_exists(path):
+                config = FileManager().read(path)
+            else:
+                # TODO: log that loading from provided location failed
+                pass
+
+        else:
+            config = FileManager().read(self.__default_config_path)
+
+        if not self.valid_config(config):
+            raise ValueError(f"Provided configuration doesn't meet requirements: {self.get_requirements()}")
+
+        self._src = config["src"]
+        self._dest = config["dest"]
+        self._operation_queue = config["operations"]
+
+        for operation in self._operation_queue:
+            self._operations[operation] = config[operation]
 
     def dump_config(self, path: Optional[str] = None) -> None:
-        if not path:
-            path = self.get_config_path()
 
-        if not self.__config["operations"]:
-            self.enqueue("rotate", {"mode": "Degree", "x": 0.0, "y": 0.0, "z": 0.0})
+        config: Dict[str | int, Any] = self.generate_config()
 
-        self.__file.write(path=path, data=self.__config)
+        if path is not None:
+            FileManager().write(path, config)
+        else:
+            FileManager().write(self.__default_config_path, config)
 
+    def enqueue(self, operation_params: Dict[str, Any]) -> None:
 
-# TODO сделать более универсальную анннотацию после стабилизации поддержки TypeVarTuple и TypeVarDict
-def pass_backbone(
-    f: Callable[[Any, Backbone, Any], BackboneCallableReturnType]
-) -> Callable[..., BackboneCallableReturnType]:
+        if "type" not in operation_params:
+            raise KeyError('operation type ("type" key) was not found among parameters!')
 
-    """
-    Decorator to pass Backbone object to a given function. Similar to Click's pass_context,
-    but does not raise error if Backbone is not initialized.
+        index: int = len(self._operation_queue) + 1
 
-    :param f: function to wrap.
-    :return: wrapped function.
-    """
-
-    @wraps(f)
-    def decorated(*args: Any, **kwargs: Any) -> Any:
-
-        new_args = list(args)
-        new_args.insert(1, Backbone())
-        args = tuple(new_args)
-
-        return f(*args, **kwargs)
-
-    return decorated
+        self._operation_queue.append(index)
+        self._operations[index] = operation_params
