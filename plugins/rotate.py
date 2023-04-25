@@ -4,6 +4,11 @@ from numpy import ndarray, dtype, float_
 from numpy.typing import NDArray
 from typing import Any
 
+from framework import Limit, ChoiceConstraint
+
+
+Limit("rotate", {"mode": ChoiceConstraint(["degree", "radian"], False)})
+
 
 def rotation_matrix_func(
     mode: str, rotate_x: float, rotate_y: float, rotate_z: float
@@ -55,12 +60,13 @@ def rotate(
     """
     Rotation transformation plugin.
 
-    :param point_cloud:
-    :param mode:
-    :param x:
-    :param y:
-    :param z:
-    :return:
+    :param mode: type of values provided to plugin (Either 'degree' or 'radian').
+
+    :param x: value to rotate by x-axis.
+
+    :param y: value to rotate by y-axis.
+
+    :param z: value to rotate by z-axis.
     """
 
     rotation_matrix = rotation_matrix_func(mode, x, y, z)
