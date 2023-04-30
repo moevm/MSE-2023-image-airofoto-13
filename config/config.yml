@@ -12,5 +12,4 @@ operations:
 2:
   type: clear
   height: 0.0
-  above: false
-  below: false  
+  mode: Below  

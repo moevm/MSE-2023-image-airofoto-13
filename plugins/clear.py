@@ -7,21 +7,16 @@ from typing import Any
 
 
 def clear(
-    data: o3d.geometry.PointCloud, height: float, above: bool, below: bool
+    data: o3d.geometry.PointCloud, height: float, mode: str
 ) -> o3d.geometry.PointCloud:
 
     pc_np: NDArray[float_] = np.asarray(data.points)
     np_colors: NDArray[float_] = np.asarray(data.colors)
 
-    if above == below:
-        raise Exception(
-            "Модель не будет изменена при равных значениях параметров above и below"
-        )
-
-    if above:
+    if mode == 'Above':
         mask: list[bool] = np.where(pc_np[:, 2] <= height, True, False)
 
-    elif below:
+    elif mode == 'Below':
         mask: list[bool] = np.where(pc_np[:, 2] >= height, True, False)
 
     result_cloud: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
