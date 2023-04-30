@@ -14,10 +14,10 @@ def clear(
     np_colors: NDArray[float_] = np.asarray(data.colors)
     mask: ndarray[Any, dtype[Any]]
 
-    if mode == 'Above':
+    if mode == "Above":
         mask = np.where(pc_np[:, 2] <= height, True, False)
 
-    elif mode == 'Below':
+    elif mode == "Below":
         mask = np.where(pc_np[:, 2] >= height, True, False)
 
     result_cloud: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
