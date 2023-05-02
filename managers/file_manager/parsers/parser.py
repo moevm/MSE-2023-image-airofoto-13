@@ -25,14 +25,14 @@ class Parser(IParser):
         """
 
         self.__file_format = file_format
-        self.__reader = reader
-        self.__writer = writer
+        self._reader = reader
+        self._writer = writer
 
     def supported_format(self) -> str:
         return self.__file_format
 
     def file_input(self, file_path: str) -> Any:
-        return self.__reader(file_path)
+        return self._reader(file_path)
 
     def file_output(self, file_path: str, data: Any) -> None:
-        self.__writer(file_path, data)
+        self._writer(file_path, data)

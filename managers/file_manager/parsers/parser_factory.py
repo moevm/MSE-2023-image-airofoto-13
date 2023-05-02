@@ -46,3 +46,21 @@ class ParserFactory(IParserFactory):
         return ParserFactory.create(
             "ply", o3d.io.read_point_cloud, o3d.io.write_point_cloud
         )
+
+    @staticmethod
+    def create_txt() -> Parser:
+
+        def read_txt(path: str) -> Any:
+            with open(path, "r") as file:
+                data = file.read()
+
+            return data
+
+        def write_txt(path: str, data: Any) -> None:
+            with open(path, "w") as file:
+                file.write(data)
+
+
+        return ParserFactory.create(
+            "txt", read_txt, write_txt
+        )

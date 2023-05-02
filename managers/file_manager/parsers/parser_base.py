@@ -97,6 +97,17 @@ class IParserFactory(ABC):
 
         pass
 
+    @staticmethod
+    @abstractmethod
+    def create_txt() -> IParser:
+        """
+        Returns a .txt file oriented IParser instance.
+
+        :return: IParser
+        """
+
+        pass
+
 
 #   Compatability wrappers for Parser creation with functions requiring file stream for file access.
 
