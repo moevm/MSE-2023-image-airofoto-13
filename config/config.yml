@@ -12,4 +12,18 @@ operations:
 2:
   type: clear
   height: 0.0
-  mode: Below  
+  mode: Below
+
+3:
+  type: crop_by_cycle
+  crop_rx: 0.0
+  crop_lx: 0.0
+  crop_fy: 0.0
+  crop_by: 0.0
+
+4:
+  type: crop_by_box
+  crop_rx: 0.0
+  crop_lx: 0.0
+  crop_fy: 0.0
+  crop_by: 0.0
