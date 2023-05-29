@@ -1,7 +1,8 @@
 import numpy as np
-import open3d as o3d            # type: ignore
+import open3d as o3d  # type: ignore
 from numpy import ndarray, dtype
 from typing import Any
+
 
 def move(
     data: o3d.geometry.PointCloud, x: float, y: float, z: float
