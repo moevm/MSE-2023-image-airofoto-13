@@ -1,17 +1,17 @@
-import open3d as o3d  # type: ignore
-
+import numpy as np
+import open3d as o3d            # type: ignore
+from numpy import ndarray, dtype
 
 def move(
     data: o3d.geometry.PointCloud, x: float, y: float, z: float
 ) -> o3d.geometry.PointCloud:
-    """
-    Dummy function for shift transformation of PointCloud.
 
-    :param data: PointCloud to transform.
-    :param x: x-axis shift value.
-    :param y: y-axis shift value.
-    :param z: z-axis shift value.
-    :return: PointCloud
-    """
+    points = data.points
 
-    return data
+    shift: ndarray = np.array([x, y, z])
+    new_points: ndarray = np.asarray(points) + shift
+
+    new_data: o3d.geometry.PointCloud = o3d.geometry.PointCloud()
+    new_data.points: o3d.cpu.pybind.utility.Vector3dVector = o3d.utility.Vector3dVector(new_points)
+    new_data.colors: o3d.cpu.pybind.utility.Vector3dVector = o3d.utility.Vector3dVector(data.colors)
+    return new_data
