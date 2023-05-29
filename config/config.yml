@@ -12,4 +12,11 @@ operations:
 2:
   type: clear
   height: 0.0
-  mode: Below  
+  mode: Below 
+
+4:
+  type: move
+  x: 0.0
+  y: 0.0
+  z: 0.0
+     
