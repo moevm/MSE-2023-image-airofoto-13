@@ -27,3 +27,9 @@ operations:
   crop_lx: 0.0
   crop_fy: 0.0
   crop_by: 0.0
+
+6:
+  type: move
+  x: 0.0
+  y: 0.0
+  z: 0.0  
