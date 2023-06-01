@@ -21,7 +21,7 @@ def crop_by_box(data: o3d.geometry.PointCloud, crop_rx: float, crop_lx: float, c
     box_points: o3d.utility.Vector3dVector = box.get_box_points()
     coord: NDArray[float_] = np.asarray(box_points)
 
-    arr: List[NDArray[float_]] = []
+    arr: list[NDArray[float_]] = []
     for x in np.nditer(coord, flags=['external_loop'], order='F'):
         arr.append(x)
     left_x: float = min(arr[0])
@@ -43,7 +43,7 @@ def crop_by_box(data: o3d.geometry.PointCloud, crop_rx: float, crop_lx: float, c
         back_y = front_y = 0
 
     bounds: list[list[float]] = [[left_x, right_x], [back_y, front_y], [-math.inf, math.inf]]
-    bounding_box_points: List[Tuple[Any]] = list(itertools.product(*bounds))
+    bounding_box_points: list[Tuple[Any]] = list(itertools.product(*bounds))
     bounding_box = o3d.geometry.AxisAlignedBoundingBox.create_from_points(o3d.utility.Vector3dVector(bounding_box_points))
     pc_cropped: o3d.geometry.PointCloud = data.crop(bounding_box)
     return pc_cropped
