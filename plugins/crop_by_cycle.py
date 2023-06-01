@@ -6,7 +6,7 @@ from typing import Any, Tuple
 
 
 def crop_by_cycle(
-    pc: o3d.geometry.PointCloud,
+    data: o3d.geometry.PointCloud,
     crop_rx: float,
     crop_lx: float,
     crop_fy: float,
@@ -16,16 +16,16 @@ def crop_by_cycle(
     Dummy function for cut transformation of PointCloud
 
     :param data: PointCloud to transform.
-    :param ul: float flag for cutting the upper-left corner.
-    :param ur: float flag for cutting the upper-right corner.
-    :param ll: float flag for cutting the lower-left corner.
-    :param lr: float flag for cutting the lower-right corner.
+    :param crop_rx: float flag for cutting the right x coordinate.
+    :param crop_lx: float flag for cutting the right x coordinate.
+    :param crop_fy: float flag for cutting front y coordinate.
+    :param crop_by: float flag for cutting back y coordinate.
     :return: PointCloud
     """
     result: list[Any] = []
     colors: list[Any] = []
-    point_cloud: NDArray[float_] = np.asarray(pc.points)
-    colors_pc: NDArray[float_] = np.asarray(pc.colors)
+    point_cloud: NDArray[float_] = np.asarray(data.points)
+    colors_pc: NDArray[float_] = np.asarray(data.colors)
 
     for point, color in zip(point_cloud, colors_pc):
         if (
