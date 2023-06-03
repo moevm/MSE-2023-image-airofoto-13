@@ -6,6 +6,7 @@ from plugins import move
 ply_file: o3d.geometry.PointCloud = o3d.io.read_point_cloud("../images/model.ply")
 ply_np: NDArray[np.float_] = np.asarray(ply_file.points)
 
+
 # checking move to (0.0, 2.0, 3.0)
 def test_move_1() -> None:
     move_cloud: o3d.geometry.PointCloud = move(ply_file, 0.0, 2.0, 3.0)
