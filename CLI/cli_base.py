@@ -64,10 +64,7 @@ class ICLI(ABC):
         """
         Entry point for the command line interface.
 
-        :param ctx: click.Context object. Should be passed automatically via @click.pass_context decorator.
-        :param path: Path to source .ply file.
-        :param dest: Path to save output file to.
-        :return: None
+        :return: IBackbone instance.
         """
 
         pass

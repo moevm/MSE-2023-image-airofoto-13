@@ -1,7 +1,7 @@
 from importlib import import_module
 from inspect import Parameter, Signature, signature
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from .plugin_base import IPluginFactory, IPlugin, IConstraint
 from .plugin import Plugin

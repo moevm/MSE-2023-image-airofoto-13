@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Any, List, Optional, Callable
+from typing import Any, Callable
 from inspect import Signature
 
 from click import Command
