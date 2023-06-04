@@ -17,17 +17,18 @@ class CLI(ICLI):
 
     _backbone = None
 
-    def __init__(self,
-                 entry_point: click.Group,
-                 command_factory: IConsoleCommandFactory,
-                 backbone: IBackbone,
-                 ) -> None:
+    def __init__(
+        self,
+        entry_point: click.Group,
+        command_factory: IConsoleCommandFactory,
+        backbone: IBackbone,
+    ) -> None:
 
         self._builder = command_factory
         self._entry_point = entry_point
         CLI._backbone = backbone
 
-        #---------------------------------------------------------------------------------------------------------------
+        # ---------------------------------------------------------------------------------------------------------------
         # hardcoded config-utility commands
 
         @click.pass_context

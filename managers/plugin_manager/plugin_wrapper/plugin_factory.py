@@ -28,16 +28,16 @@ class PluginFactory(IPluginFactory):
         plugins = [file.name[:-3:] for file in directory.glob("*.py")]
 
         if "__init__" in plugins:
-            plugins.pop(
-                plugins.index("__init__")
-            )
+            plugins.pop(plugins.index("__init__"))
 
         return plugins
 
     @staticmethod
-    def _constrain(original: Signature, constraints: Dict[str, IConstraint]) -> Signature:
+    def _constrain(
+        original: Signature, constraints: Dict[str, IConstraint]
+    ) -> Signature:
 
-        new_arguments : List[Parameter] = []
+        new_arguments: List[Parameter] = []
 
         for argument in original.parameters:
 
@@ -50,7 +50,7 @@ class PluginFactory(IPluginFactory):
                         argument,
                         Parameter.POSITIONAL_OR_KEYWORD,
                         annotation=constraints[argument].to_click(),
-                        default=original.parameters[argument].default
+                        default=original.parameters[argument].default,
                     )
                 )
 
@@ -64,17 +64,17 @@ class PluginFactory(IPluginFactory):
         plugin_module = import_module(plugin)
 
         if name not in plugin_module.__dict__:
-            raise ImportError(f"Module {name} does not contain a plugin function "
-                              f"(callable function with the same name)")
+            raise ImportError(
+                f"Module {name} does not contain a plugin function "
+                f"(callable function with the same name)"
+            )
 
         plugin_signature = signature(plugin_module.__dict__[name])
 
         if PluginFactory._plugin_constraints in plugin_module.__dict__:
-            plugin_signature = PluginFactory._constrain(plugin_signature,
-                                                        plugin_module.__dict__[PluginFactory._plugin_constraints]
-                                                        )
+            plugin_signature = PluginFactory._constrain(
+                plugin_signature,
+                plugin_module.__dict__[PluginFactory._plugin_constraints],
+            )
 
-        return Plugin(
-            plugin_module.__dict__[name],
-            plugin_signature
-        )
+        return Plugin(plugin_module.__dict__[name], plugin_signature)

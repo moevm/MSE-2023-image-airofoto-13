@@ -21,11 +21,14 @@ class IConstraint(ABC):
 
         pass
 
-#-----------------------------------------------------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------------------------------------------------
+
 
 class ChoiceConstraint(IConstraint):
-
-    def __init__(self, choices: List[str], case_sensitive: Optional[bool] = True) -> None:
+    def __init__(
+        self, choices: List[str], case_sensitive: Optional[bool] = True
+    ) -> None:
         self.__click_representation = Choice(choices, case_sensitive)
 
     def to_click(self) -> ParamType:
@@ -33,7 +36,6 @@ class ChoiceConstraint(IConstraint):
 
 
 class PathConstraint(IConstraint):
-
     def __init__(self, exists: Optional[bool] = False) -> None:
 
         self.__click_representation = Path(exists=exists)

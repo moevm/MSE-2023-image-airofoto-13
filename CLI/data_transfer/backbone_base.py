@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional
 from abc import abstractmethod, ABC
 
 
-
 class IBackbone(ABC):
 
     """

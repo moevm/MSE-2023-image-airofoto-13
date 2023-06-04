@@ -10,8 +10,9 @@ from CLI.cli import CLI
 
 
 class CLIBuilder(ICLIBuilder):
-
-    def __init__(self, command_factory: Optional[IConsoleCommandFactory] = None) -> None:
+    def __init__(
+        self, command_factory: Optional[IConsoleCommandFactory] = None
+    ) -> None:
 
         if not command_factory:
             command_factory = ConsoleCommandFactory(save_function=save_to_backbone)
@@ -19,16 +20,28 @@ class CLIBuilder(ICLIBuilder):
         self._command_builder = command_factory
 
         self._cli_arguments = {
-            "logging": Option(["--log"], type=Choice(["no", "info", "debug"], case_sensitive=False), default="info",
-                              help="Logging mode. 'no' - silent mode with no logging at all. 'info' - basic logging."
-                              " 'debug' - detailed logging for debugging"),
-            "source_path": Option(["--path", "--p"], type=Path(exists=True),
-                                  help="Path to the source data .ply file."),
-            "save_path": Option(["--dest", "--d"], type=Path(exists=False),
-                                help="Path to save the program output to.")
+            "logging": Option(
+                ["--log"],
+                type=Choice(["no", "info", "debug"], case_sensitive=False),
+                default="info",
+                help="Logging mode. 'no' - silent mode with no logging at all. 'info' - basic logging."
+                " 'debug' - detailed logging for debugging",
+            ),
+            "source_path": Option(
+                ["--path", "--p"],
+                type=Path(exists=True),
+                help="Path to the source data .ply file.",
+            ),
+            "save_path": Option(
+                ["--dest", "--d"],
+                type=Path(exists=False),
+                help="Path to save the program output to.",
+            ),
         }
 
-    def build_commands(self, plugins: Dict[str, Tuple[str, Signature]]) -> Dict[str, Command]:
+    def build_commands(
+        self, plugins: Dict[str, Tuple[str, Signature]]
+    ) -> Dict[str, Command]:
 
         commands = {}
 
@@ -39,24 +52,26 @@ class CLIBuilder(ICLIBuilder):
 
         return commands
 
-    def build_group(self,
-                    executable: Optional[Callable[[click.Context, ...], None]] = None,
-                    arguments: Optional[Dict[str, Parameter]] = None,
-                    chain_commands: bool = True,
-                    ) -> Group:
+    def build_group(
+        self,
+        executable: Optional[Callable[[click.Context, ...], None]] = None,
+        arguments: Optional[Dict[str, Parameter]] = None,
+        chain_commands: bool = True,
+    ) -> Group:
 
         if not executable:
 
             @click.group("entry_point", chain=chain_commands)
             @click.pass_context
-            def standard(ctx: click.Context,
-                         log: str,
-                         path: Optional[str] = None,
-                         dest: Optional[str] = None,
-                         ) -> None:
+            def standard(
+                ctx: click.Context,
+                log: str,
+                path: Optional[str] = None,
+                dest: Optional[str] = None,
+            ) -> None:
                 ctx.obj = CLI.get_backbone()
 
-                #TODO implement logging settings
+                # TODO implement logging settings
 
                 ctx.obj.set_source(path)
                 ctx.obj.set_destination(dest)
@@ -65,7 +80,9 @@ class CLIBuilder(ICLIBuilder):
 
         else:
 
-            executable = click.Group(name="entry_point", callback=executable, chain=chain_commands)
+            executable = click.Group(
+                name="entry_point", callback=executable, chain=chain_commands
+            )
 
         for parameter in self._cli_arguments:
             executable.params.append(self._cli_arguments[parameter])
@@ -76,7 +93,6 @@ class CLIBuilder(ICLIBuilder):
 
         return Backbone()
 
-
     def build_cli(self, plugins: Dict[str, Tuple[str, Signature]]) -> ICLI:
 
         commands = self.build_commands(plugins)
@@ -85,7 +101,4 @@ class CLIBuilder(ICLIBuilder):
         for command in commands:
             entry_point.add_command(commands[command])
 
-        return CLI(entry_point,
-                   self._command_builder,
-                   self.build_backbone()
-                   )
+        return CLI(entry_point, self._command_builder, self.build_backbone())

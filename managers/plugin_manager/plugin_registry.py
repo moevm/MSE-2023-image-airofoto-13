@@ -16,19 +16,21 @@ class PluginRegistry(IPluginRegistry):
     @classmethod
     def build(cls, package: Optional[str] = None) -> IPluginRegistry:
 
-        plugin_names = PluginFactory.lookup(package if package else cls._default_plugin_package)
+        plugin_names = PluginFactory.lookup(
+            package if package else cls._default_plugin_package
+        )
 
         plugins = {}
 
         for name in plugin_names:
-            plugins[name] = PluginFactory.make_plugin(name, package if package else cls._default_plugin_package)
+            plugins[name] = PluginFactory.make_plugin(
+                name, package if package else cls._default_plugin_package
+            )
 
         return cls(plugins)
 
-
     def add_plugin(self, name: str, package: Optional[str] = None) -> None:
         self._plugins[name] = PluginFactory.make_plugin(name, package)
-
 
     def set_target(self, target: ITarget) -> None:
         self._target = target

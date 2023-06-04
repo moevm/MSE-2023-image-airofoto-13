@@ -32,6 +32,7 @@ class IPlugin(ICommand):
         """
         pass
 
+
 class IPluginFactory(ABC):
 
     """
@@ -40,7 +41,9 @@ class IPluginFactory(ABC):
 
     @staticmethod
     @abstractmethod
-    def _constrain(original: Signature, constraints: Dict[str, IConstraint]) -> Signature:
+    def _constrain(
+        original: Signature, constraints: Dict[str, IConstraint]
+    ) -> Signature:
         """
         Returns a modified Signature object, containing all the provided argument constraints.
 

@@ -28,12 +28,14 @@ def save_to_backbone(ctx: click.Context, data: Dict[str, Any]) -> None:
     """
 
     if type(ctx.obj) != Backbone:
-        raise TypeError(f"Context object is not an IBackbone instance! ({type(ctx.obj)})")
+        raise TypeError(
+            f"Context object is not an IBackbone instance! ({type(ctx.obj)})"
+        )
 
     ctx.obj.enqueue(data)
 
-class Backbone(IBackbone):
 
+class Backbone(IBackbone):
     def __init__(self, requirements: Optional[List[str]] = None) -> None:
 
         # default paths
@@ -50,13 +52,15 @@ class Backbone(IBackbone):
             if minimal_requirements in requirements:
                 self._requirements = requirements
             else:
-                raise ValueError(f"Custom requirements should contain the minimal ones: {minimal_requirements}")
+                raise ValueError(
+                    f"Custom requirements should contain the minimal ones: {minimal_requirements}"
+                )
 
         # config body
         self._src: str = ""
         self._dest: str = ""
         self._operation_queue: List[int] = []
-        self._operations: Dict[int , Dict[str, Any]] = {}
+        self._operations: Dict[int, Dict[str, Any]] = {}
 
     def set_source(self, path: str) -> None:
         self._src = path
@@ -86,9 +90,11 @@ class Backbone(IBackbone):
 
     def generate_config(self) -> Dict[str | int, Any]:
 
-        config: Dict[str | int, Any] = {"src": self.get_source(),
-                                        "dest": self.get_destination(),
-                                        "operations": self._operation_queue}
+        config: Dict[str | int, Any] = {
+            "src": self.get_source(),
+            "dest": self.get_destination(),
+            "operations": self._operation_queue,
+        }
 
         for operation in self._operation_queue:
             config[operation] = self._operations[operation]
@@ -111,7 +117,9 @@ class Backbone(IBackbone):
             config = FileManager().read(self.__default_config_path)
 
         if not self.valid_config(config):
-            raise ValueError(f"Provided configuration doesn't meet requirements: {self.get_requirements()}")
+            raise ValueError(
+                f"Provided configuration doesn't meet requirements: {self.get_requirements()}"
+            )
 
         self._src = config["src"]
         self._dest = config["dest"]
@@ -132,7 +140,9 @@ class Backbone(IBackbone):
     def enqueue(self, operation_params: Dict[str, Any]) -> None:
 
         if "type" not in operation_params:
-            raise KeyError('operation type ("type" key) was not found among parameters!')
+            raise KeyError(
+                'operation type ("type" key) was not found among parameters!'
+            )
 
         index: int = len(self._operation_queue) + 1
 

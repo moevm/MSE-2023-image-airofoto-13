@@ -8,8 +8,9 @@ from managers import PluginInfo
 
 
 class ConsoleCommandFactory(IConsoleCommandFactory):
-
-    def __init__(self, save_function: Callable[[Context, Dict[str, Any]], None]) -> None:
+    def __init__(
+        self, save_function: Callable[[Context, Dict[str, Any]], None]
+    ) -> None:
 
         self._save_function = save_function
 
@@ -22,22 +23,21 @@ class ConsoleCommandFactory(IConsoleCommandFactory):
             if args.parameters[arg].annotation is None:
                 raise ValueError(f"No type specification for {arg}!")
 
-
             argument_list.append(
                 Argument(
                     [arg],
                     required=True,
                     type=args.parameters[arg].annotation,
                     # Since inspect has a special marker for non-existent default values we replace it with None
-                    default=args.parameters[arg].default if args.parameters[arg].default
-                                                            is not args.parameters[arg].empty else None,
+                    default=args.parameters[arg].default
+                    if args.parameters[arg].default is not args.parameters[arg].empty
+                    else None,
                 )
             )
 
         return argument_list
 
     def kwargs_save_callback(self, name: str) -> Callable[[Context, Any], None]:
-
         @pass_context
         def callback(ctx: Context, **kwargs: Dict[str, Any]) -> None:
 
@@ -53,15 +53,19 @@ class ConsoleCommandFactory(IConsoleCommandFactory):
 
     def create_from_function(self, executable: Callable[[...], Any]) -> Command:
 
-        return self.create_from_signature(name=executable.__name__,
-                                                           help_msg=executable.__doc__,
-                                                           arguments=signature(executable)
+        return self.create_from_signature(
+            name=executable.__name__,
+            help_msg=executable.__doc__,
+            arguments=signature(executable),
         )
 
-    def create_from_signature(self, name: str, help_msg: str, arguments: Signature) -> Command:
+    def create_from_signature(
+        self, name: str, help_msg: str, arguments: Signature
+    ) -> Command:
 
-        return Command(name=name,
-                       params=self._get_arguments(arguments),
-                       callback=self.kwargs_save_callback(name),
-                       help=help_msg
-                       )
+        return Command(
+            name=name,
+            params=self._get_arguments(arguments),
+            callback=self.kwargs_save_callback(name),
+            help=help_msg,
+        )

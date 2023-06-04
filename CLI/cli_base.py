@@ -9,7 +9,6 @@ from managers import PluginInfo
 
 
 class ICLI(ABC):
-
     @abstractmethod
     def attach_command(self, command: click.Command) -> None:
 
@@ -76,9 +75,10 @@ class ICLIBuilder(ABC):
     Builder class for CLI.
     """
 
-
     @abstractmethod
-    def build_commands(self, plugins: Dict[str, Tuple[str, Signature]]) -> Dict[str, click.Command]:
+    def build_commands(
+        self, plugins: Dict[str, Tuple[str, Signature]]
+    ) -> Dict[str, click.Command]:
         """
         Generates CLI representation for plugins.
 
@@ -89,11 +89,12 @@ class ICLIBuilder(ABC):
         pass
 
     @abstractmethod
-    def build_group(self,
-                    executable: Optional[Callable[[click.Context, ...], None]] = None,
-                    arguments: Optional[Dict[str, click.Parameter]] = None,
-                    chain_commands: bool = True
-                    ) -> click.Group:
+    def build_group(
+        self,
+        executable: Optional[Callable[[click.Context, ...], None]] = None,
+        arguments: Optional[Dict[str, click.Parameter]] = None,
+        chain_commands: bool = True,
+    ) -> click.Group:
         """
         Creates a click.Group instance with the provided arguments and options (or the default ones),
         which serves as the entry point for CLI.

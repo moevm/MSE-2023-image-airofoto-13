@@ -8,7 +8,6 @@ import open3d as o3d
 
 def main() -> None:
 
-
     reg = PluginRegistry.build()
 
     plugins = {name: reg.get_info(name) for name in reg.supported_plugins()}
@@ -22,7 +21,10 @@ def main() -> None:
             if plugins[name].sig.parameters[arg].annotation != o3d.geometry.PointCloud:
                 new_parameters.append(plugins[name].sig.parameters[arg])
 
-        plugins[name] = (plugins[name].desc, plugins[name].sig.replace(parameters=new_parameters))
+        plugins[name] = (
+            plugins[name].desc,
+            plugins[name].sig.replace(parameters=new_parameters),
+        )
 
     builder = CLIBuilder()
 

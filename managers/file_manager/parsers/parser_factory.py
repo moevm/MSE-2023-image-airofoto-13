@@ -8,6 +8,7 @@ from .parser import Parser
 
 #   Compatability wrappers for Parser creation with functions requiring file stream for file access.
 
+
 def read_stream(function: Callable[[IO[str]], Any]) -> Callable[[str], Any]:
 
     """
@@ -60,14 +61,14 @@ def yml_write_wo_sorting(stream: Any, data: Any) -> None:
     yaml.safe_dump(data, stream, sort_keys=False)
 
 
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
 
 
 class ParserFactory(IParserFactory):
 
     _parsers = {
-        "ply" : [o3d.io.read_point_cloud, o3d.io.write_point_cloud],
-        "yml": [read_stream(yaml.safe_load), write_stream(yml_write_wo_sorting)]
+        "ply": [o3d.io.read_point_cloud, o3d.io.write_point_cloud],
+        "yml": [read_stream(yaml.safe_load), write_stream(yml_write_wo_sorting)],
     }
 
     @staticmethod
@@ -108,7 +109,5 @@ class ParserFactory(IParserFactory):
             raise KeyError(f"{item} is not supported!")
 
         return Parser(
-            item,
-            ParserFactory._parsers[item][0],
-            ParserFactory._parsers[item][1]
+            item, ParserFactory._parsers[item][0], ParserFactory._parsers[item][1]
         )

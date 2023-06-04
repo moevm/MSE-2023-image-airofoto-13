@@ -9,10 +9,11 @@ PluginCallableReturnType = TypeVar("PluginCallableReturnType")
 
 
 class Plugin(IPlugin):
-    def __init__(self,
-                 executable: Callable[[...], PluginCallableReturnType],
-                 constraints: Signature = None
-                 ) -> None:
+    def __init__(
+        self,
+        executable: Callable[[...], PluginCallableReturnType],
+        constraints: Signature = None,
+    ) -> None:
 
         self.__executable = executable
         self.__constraints: Signature | None = constraints

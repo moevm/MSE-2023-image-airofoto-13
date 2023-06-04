@@ -12,6 +12,7 @@ class IConsoleCommandFactory(ABC):
     """
     Interface for CLI Command serialization Factory.
     """
+
     @abstractmethod
     def kwargs_save_callback(self, name: str) -> Callable[[...], None]:
 
@@ -50,7 +51,9 @@ class IConsoleCommandFactory(ABC):
         pass
 
     @abstractmethod
-    def create_from_signature(self, name: str, help_msg: str, arguments: Signature) -> Command:
+    def create_from_signature(
+        self, name: str, help_msg: str, arguments: Signature
+    ) -> Command:
 
         """
         Generates the CLI command from given Signature object.
