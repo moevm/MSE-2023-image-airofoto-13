@@ -4,10 +4,10 @@ from numpy import ndarray, dtype, float_
 from numpy.typing import NDArray
 from typing import Any
 
-from framework import Limit, ChoiceConstraint
+from framework import ChoiceConstraint
 
 
-Limit("rotate", {"mode": ChoiceConstraint(["degree", "radian"], False)})
+constraints = {"mode": ChoiceConstraint(["degree", "radian"], False)}
 
 
 def rotation_matrix_func(

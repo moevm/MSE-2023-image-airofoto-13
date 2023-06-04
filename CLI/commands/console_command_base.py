@@ -4,25 +4,14 @@ from inspect import Signature
 
 from click import Command
 
+from managers import PluginInfo
+
 
 class IConsoleCommandFactory(ABC):
 
     """
     Interface for CLI Command serialization Factory.
     """
-
-    @abstractmethod
-    def get_plugin_names(self, package: Optional[str] = None) -> List[str]:
-
-        """
-        Returns a list of plugins located at a specified package.
-
-        :param package: Name of the package
-        :return: List of plugins inside the package.
-        """
-
-        pass
-
     @abstractmethod
     def kwargs_save_callback(self, name: str) -> Callable[[...], None]:
 
@@ -36,14 +25,14 @@ class IConsoleCommandFactory(ABC):
         pass
 
     @abstractmethod
-    def create_from_plugin(self, name: str, package: Optional[str] = None) -> Command:
-
+    def create_from_info(self, data: PluginInfo) -> Command:
         """
-        Loads plugin from package and creates console representation for it.
+        Creates CLI representation for given plugin, based on the information provided in PluginInfo instance.
+        Primary method for generating CLI commands.
 
-        :param name: Name of the plugin.
-        :param package: Name of the package.
-        :return: click.Command instance, representing the plugin.
+        :param data: PluginInfo instance
+
+        :return: click.Command
         """
 
         pass

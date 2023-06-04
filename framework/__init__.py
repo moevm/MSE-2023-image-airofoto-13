@@ -1,15 +1,13 @@
 from .abstract_factory import IFactory
 from .singleton import EmbedSingleton
 from .command import ICommand, ITarget
-from .limit import Limit, ChoiceConstraint, PathConstraint
-from .loader import ILoader, Loader
+from .constraints import IConstraint, ChoiceConstraint, PathConstraint
 
 
 __all__ = ["IFactory",
            "EmbedSingleton",
            "ICommand",
            "ITarget",
-           "Loader",
-           "Limit",
+           "IConstraint",
            "ChoiceConstraint",
            "PathConstraint"]
