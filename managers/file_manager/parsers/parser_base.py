@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, IO
+from typing import Any, Callable, List
 
 
 class IParser(ABC):
@@ -59,6 +59,14 @@ class IParserFactory(ABC):
 
     @staticmethod
     @abstractmethod
+    def get_supported() -> List[str]:
+        """
+        Returns a list of supported file-formats (
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
     def create(
         name: str, reader: Callable[[str], Any], writer: Callable[[str, Any], None]
     ) -> IParser:
@@ -97,43 +105,7 @@ class IParserFactory(ABC):
 
         pass
 
-
-#   Compatability wrappers for Parser creation with functions requiring file stream for file access.
-
-
-def read_stream(function: Callable[[IO[str]], Any]) -> Callable[[str], Any]:
-
-    """
-    Parser compatability wrapper for input stream dependent functions.
-
-    :param function: input function, requiring file stream.
-    :return: wrapped Parser compatible function
-    """
-
-    def wrapper(path: str) -> Any:
-
-        with open(path, "r") as source:
-            data = function(source)
-
-        return data
-
-    return wrapper
-
-
-def write_stream(
-    function: Callable[[IO[str], Any], None]
-) -> Callable[[str, Any], None]:
-
-    """
-    Parser compatability wrapper for output stream dependent functions.
-
-    :param function: output function, requiring file stream.
-    :return: wrapped Parser compatible function
-    """
-
-    def wrapper(path: str, data: Any) -> None:
-
-        with open(path, "w") as source:
-            function(source, data)
-
-    return wrapper
+    @staticmethod
+    @abstractmethod
+    def __getitem__(self, item: str) -> IParser:
+        pass
