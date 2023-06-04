@@ -1,16 +1,17 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, Optional
+from inspect import Signature
+from typing import Any, Callable, Dict, Optional, Tuple
 
-from click import Command, Context, group, option, pass_context, Path
+import click
 
-from CLI.commands import IConsoleCommandFactory
 from CLI.data_transfer import IBackbone
+from managers import PluginInfo
 
 
 class ICLI(ABC):
 
     @abstractmethod
-    def attach_command(self, command: Command) -> None:
+    def attach_command(self, command: click.Command) -> None:
 
         """
         Adds given command to CLI instance's invokable commands.
@@ -22,14 +23,13 @@ class ICLI(ABC):
         pass
 
     @abstractmethod
-    def attach_plugin(self, name: str, package: str) -> None:
+    def attach_plugin(self, data: PluginInfo) -> None:
 
         """
         Generates the console representation for given plugin and
         adds it to invokable commands of the current CLI instance.
 
-        :param name: Name of the .py file containing the plugin (also the name of the target function inside the file).
-        :param package: Python package, where the plugin is located.
+        :data: PluginInfo instance with information about the plugin.
         :return: None.
         """
 
@@ -47,8 +47,9 @@ class ICLI(ABC):
 
         pass
 
+    @staticmethod
     @abstractmethod
-    def get_backbone(self) -> IBackbone:
+    def get_backbone() -> IBackbone:
 
         """
         Returns current CLI's DTO - IBackbone instance.
@@ -58,13 +59,7 @@ class ICLI(ABC):
 
         pass
 
-    @staticmethod
-    @abstractmethod
-    @group(chain=True)
-    @pass_context
-    @option("--path", "--p", type=Path(exists=True), help="Path to the source data .ply file.")
-    @option("--dest", "--d", type=Path(exists=False), help="Path to save the program output to.")
-    def entry_point(ctx: Context, path: Optional[str] = None, dest: Optional[str] = None) -> None:
+    def run(self) -> IBackbone:
 
         """
         Entry point for the command line interface.
@@ -84,33 +79,39 @@ class ICLIBuilder(ABC):
     Builder class for CLI.
     """
 
-    @staticmethod
+
     @abstractmethod
-    def get_commands() -> Dict[str, Command]:
-
+    def build_commands(self, plugins: Dict[str, Tuple[str, Signature]]) -> Dict[str, click.Command]:
         """
-        Returns a dictionary of plugins in specified directory.
+        Generates CLI representation for plugins.
 
-        :return: Dict with loaded plugins.
+        :param plugins: Dictionary of Signature objects
+        :return: Dictionary of click.Command instances
         """
 
         pass
 
-    @staticmethod
     @abstractmethod
-    def build_command_factory() -> IConsoleCommandFactory:
-
+    def build_group(self,
+                    executable: Optional[Callable[[click.Context, ...], None]] = None,
+                    arguments: Optional[Dict[str, click.Parameter]] = None,
+                    chain_commands: bool = True
+                    ) -> click.Group:
         """
-        Returns a Command serialization factory for CLI.
+        Creates a click.Group instance with the provided arguments and options (or the default ones),
+        which serves as the entry point for CLI.
 
-        :return:
+        :param executable: The function which will serve as CLI entry_point.
+         Default one will be generated if None was provided.
+        :param arguments: Dictionary of Parameters (Argument or Option) for entry point.
+        :param chain_commands: Boolean flag to switch command chaining in click.Group instance.
+        :return: click.Group instance
         """
 
         pass
 
-    @staticmethod
     @abstractmethod
-    def build_backbone() -> IBackbone:
+    def build_backbone(self) -> IBackbone:
 
         """
         Returns an IBackbone instance.
@@ -120,9 +121,8 @@ class ICLIBuilder(ABC):
 
         pass
 
-    @staticmethod
     @abstractmethod
-    def build_cli() -> ICLI:
+    def build_cli(self, plugins: Dict[str, Tuple[str, Signature]]) -> ICLI:
 
         """
         Creates a fully functional CLI instance.
