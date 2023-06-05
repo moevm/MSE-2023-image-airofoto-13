@@ -62,7 +62,7 @@ class Backbone(IBackbone):
         self._operation_queue: List[int] = []
         self._operations: Dict[int, Dict[str, Any]] = {}
 
-    def set_source(self, path: Optional[str]) -> None:
+    def set_source(self, path: Optional[str] = None) -> None:
         if not path:
             path = self.__default_data_path
 

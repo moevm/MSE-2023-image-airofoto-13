@@ -5,7 +5,7 @@ from click import Group, Command, Parameter, Option, Choice, Path
 
 from CLI.cli_base import ICLI, ICLIBuilder
 from CLI.commands import IConsoleCommandFactory, ConsoleCommandFactory
-from CLI.data_transfer.backbone import IBackbone, Backbone, save_to_backbone
+from CLI.data_transfer import IBackbone, Backbone, save_to_backbone
 from CLI.cli import CLI
 
 
