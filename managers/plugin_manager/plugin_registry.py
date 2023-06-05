@@ -30,7 +30,8 @@ class PluginRegistry(IPluginRegistry):
         return cls(plugins)
 
     def add_plugin(self, name: str, package: Optional[str] = None) -> None:
-        self._plugins[name] = PluginFactory.make_plugin(name, package)
+        self._plugins[name] = PluginFactory.make_plugin(name, package if package
+        else PluginRegistry._default_plugin_package)
 
     def set_target(self, target: ITarget) -> None:
         self._target = target

@@ -3,7 +3,7 @@
 from CLI import CLIBuilder, Backbone
 from managers import PluginRegistry
 
-import open3d as o3d
+import open3d as o3d    # type: ignore
 from inspect import Signature
 from typing import Dict, Tuple
 
@@ -28,15 +28,16 @@ def get_plugins_info() -> Dict[str, Tuple[str, Signature]]:
     reg = PluginRegistry.build()
 
     plugins = {name: reg.get_info(name) for name in reg.supported_plugins()}
+    new_data = {}
 
     for name in plugins:
 
-        plugins[name] = (
+        new_data[name] = (
             plugins[name].desc,
             cut_point_cloud(plugins[name].sig),
         )
 
-    return plugins
+    return new_data
 
 
 def main() -> None:
@@ -46,6 +47,9 @@ def main() -> None:
     ui = builder.build_cli(get_plugins_info())
 
     config = ui.run()
+
+    if not config:
+        raise TypeError("No Backbone provided!")
 
     print(config.generate_config())
 

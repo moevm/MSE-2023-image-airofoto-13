@@ -10,7 +10,7 @@ class Model(IModel):
     def __init__(self, registry: Optional[PluginRegistry] = None):
 
         if registry is None:
-            self.__operations = PluginRegistry()
+            self.__operations = PluginRegistry({})
             self.__operations.add_plugin("rotate")
         else:
             self.__operations = registry

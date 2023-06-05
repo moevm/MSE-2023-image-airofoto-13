@@ -103,7 +103,7 @@ class ParserFactory(IParserFactory):
         )
 
     @staticmethod
-    def __getitem__(self, item: str) -> Parser:
+    def __getitem__(item: str) -> Parser:
 
         if item not in ParserFactory._parsers:
             raise KeyError(f"{item} is not supported!")

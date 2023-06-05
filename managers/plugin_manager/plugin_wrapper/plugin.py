@@ -1,4 +1,4 @@
-from typing import Any, List, Dict, Callable, TypeVar
+from typing import Any, List, Dict, Callable, Optional, TypeVar
 from inspect import signature, Signature
 
 from framework import ITarget
@@ -11,8 +11,8 @@ PluginCallableReturnType = TypeVar("PluginCallableReturnType")
 class Plugin(IPlugin):
     def __init__(
         self,
-        executable: Callable[[...], PluginCallableReturnType],
-        constraints: Signature = None,
+        executable: Callable[[Any], PluginCallableReturnType],
+        constraints: Optional[Signature] = None,
     ) -> None:
 
         self.__executable = executable
@@ -25,7 +25,7 @@ class Plugin(IPlugin):
         return signature(self.__executable)
 
     def get_help(self) -> str:
-        return self.__executable.__doc__
+        return str(self.__executable.__doc__)
 
     def execute(
         self, target: ITarget, *args: List[Any], **kwargs: Dict[str, Any]

@@ -11,7 +11,7 @@ class IBackbone(ABC):
     """
 
     @abstractmethod
-    def set_source(self, path: str) -> None:
+    def set_source(self, path: Optional[str] = None) -> None:
         """
         Sets source data location.
 
@@ -30,7 +30,7 @@ class IBackbone(ABC):
         pass
 
     @abstractmethod
-    def set_destination(self, path: str) -> None:
+    def set_destination(self, path: Optional[str]) -> None:
         """
         Sets output file location.
 

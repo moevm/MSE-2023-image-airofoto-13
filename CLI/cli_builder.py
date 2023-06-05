@@ -1,11 +1,11 @@
 import click
 from inspect import Signature
-from typing import Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, Optional, Tuple
 from click import Group, Command, Parameter, Option, Choice, Path
 
-from CLI.cli_base import ICLI, IBackbone, ICLIBuilder
+from CLI.cli_base import ICLI, ICLIBuilder
 from CLI.commands import IConsoleCommandFactory, ConsoleCommandFactory
-from CLI.data_transfer.backbone import Backbone, save_to_backbone
+from CLI.data_transfer.backbone import IBackbone, Backbone, save_to_backbone
 from CLI.cli import CLI
 
 
@@ -54,7 +54,7 @@ class CLIBuilder(ICLIBuilder):
 
     def build_group(
         self,
-        executable: Optional[Callable[[click.Context, ...], None]] = None,
+        executable: Optional[Callable[[click.Context, Any], None]] = None,
         arguments: Optional[Dict[str, Parameter]] = None,
         chain_commands: bool = True,
     ) -> Group:
@@ -71,23 +71,26 @@ class CLIBuilder(ICLIBuilder):
             ) -> None:
                 ctx.obj = CLI.get_backbone()
 
+                if ctx.obj is None:
+                    raise TypeError("No backbone in Context!")
+
                 # TODO implement logging settings
 
                 ctx.obj.set_source(path)
                 ctx.obj.set_destination(dest)
 
-            executable = standard
+            callback_executable = standard
 
         else:
 
-            executable = click.Group(
+            callback_executable = click.Group(
                 name="entry_point", callback=executable, chain=chain_commands
             )
 
         for parameter in self._cli_arguments:
-            executable.params.append(self._cli_arguments[parameter])
+            callback_executable.params.append(self._cli_arguments[parameter])
 
-        return executable
+        return callback_executable
 
     def build_backbone(self) -> IBackbone:
 

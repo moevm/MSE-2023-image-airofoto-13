@@ -1,8 +1,8 @@
 from abc import abstractmethod, ABC
-from typing import Any, Callable
+from typing import Any, Dict, Callable
 from inspect import Signature
 
-from click import Command
+from click import Command, Context
 
 from managers import PluginInfo
 
@@ -14,7 +14,7 @@ class IConsoleCommandFactory(ABC):
     """
 
     @abstractmethod
-    def kwargs_save_callback(self, name: str) -> Callable[[...], None]:
+    def kwargs_save_callback(self, name: str) -> Callable[[Context, Any], None]:
 
         """
         Automatically generates callback for command to save data.
@@ -39,7 +39,7 @@ class IConsoleCommandFactory(ABC):
         pass
 
     @abstractmethod
-    def create_from_function(self, executable: Callable[[...], Any]) -> Command:
+    def create_from_function(self, executable: Callable[[Any], Any]) -> Command:
 
         """
         Creates a CLI representation for given function.

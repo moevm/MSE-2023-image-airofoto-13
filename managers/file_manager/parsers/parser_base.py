@@ -107,5 +107,5 @@ class IParserFactory(ABC):
 
     @staticmethod
     @abstractmethod
-    def __getitem__(self, item: str) -> IParser:
+    def __getitem__(item: str) -> IParser:
         pass

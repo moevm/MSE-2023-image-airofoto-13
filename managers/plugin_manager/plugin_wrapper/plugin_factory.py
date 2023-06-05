@@ -3,8 +3,9 @@ from inspect import Parameter, Signature, signature
 from pathlib import Path
 from typing import Dict, List
 
-from .plugin_base import IPluginFactory, IPlugin, IConstraint
+from .plugin_base import IPluginFactory, IPlugin
 from .plugin import Plugin
+from framework import IConstraint
 
 
 class PluginFactory(IPluginFactory):

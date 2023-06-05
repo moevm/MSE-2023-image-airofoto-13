@@ -15,7 +15,7 @@ BackboneReturnType = TypeVar("BackboneReturnType")
 
 class CLI(ICLI):
 
-    _backbone = None
+    _backbone: IBackbone | None = None
 
     def __init__(
         self,
@@ -68,16 +68,16 @@ class CLI(ICLI):
 
         self.attach_command(self._builder.create_from_info(data))
 
-    def generate_command(self, function: Callable[[...], Any]) -> None:
+    def generate_command(self, function: Callable[[Any], Any]) -> None:
 
         self.attach_command(self._builder.create_from_function(function))
 
     @staticmethod
-    def get_backbone() -> IBackbone:
+    def get_backbone() -> IBackbone | None:
 
         return CLI._backbone
 
-    def run(self) -> IBackbone:
+    def run(self) -> IBackbone | None:
 
         # click finishes whole execution as soon as the cli group finishes its execution.
         # The try-except block below prevents that from happening.

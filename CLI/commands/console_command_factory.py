@@ -1,9 +1,9 @@
 from typing import Any, Callable, Dict, List
 from inspect import Signature, signature
 
-from click import Command, Argument, pass_context, Context
+from click import Command, Parameter, Argument, pass_context, Context
 
-from .console_command_base import IConsoleCommandFactory
+from CLI.commands.console_command_base import IConsoleCommandFactory
 from managers import PluginInfo
 
 
@@ -15,8 +15,8 @@ class ConsoleCommandFactory(IConsoleCommandFactory):
         self._save_function = save_function
 
     @staticmethod
-    def _get_arguments(args: Signature) -> List[Argument]:
-        argument_list = []
+    def _get_arguments(args: Signature) -> List[Parameter]:
+        argument_list: List[Parameter] = []
 
         for arg in args.parameters:
 
@@ -39,23 +39,23 @@ class ConsoleCommandFactory(IConsoleCommandFactory):
 
     def kwargs_save_callback(self, name: str) -> Callable[[Context, Any], None]:
         @pass_context
-        def callback(ctx: Context, **kwargs: Dict[str, Any]) -> None:
+        def callback(ctx: Context, **kwargs:  Any) -> None:
 
-            data = {"type": name}
+            data: Dict[str, str | Dict[str, Any]] = {"type": name}
             data.update(**kwargs)
 
             self._save_function(ctx, data)
 
-        return callback
+        return callback # type: ignore
 
     def create_from_info(self, data: PluginInfo) -> Command:
         return self.create_from_signature(data.name, data.desc, data.sig)
 
-    def create_from_function(self, executable: Callable[[...], Any]) -> Command:
+    def create_from_function(self, executable: Callable[[Any], Any]) -> Command:
 
         return self.create_from_signature(
             name=executable.__name__,
-            help_msg=executable.__doc__,
+            help_msg=str(executable.__doc__),
             arguments=signature(executable),
         )
 

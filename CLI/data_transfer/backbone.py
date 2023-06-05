@@ -49,7 +49,7 @@ class Backbone(IBackbone):
         self._requirements = minimal_requirements
 
         if requirements is not None:
-            if minimal_requirements in requirements:
+            if all(element in requirements for element in minimal_requirements):
                 self._requirements = requirements
             else:
                 raise ValueError(
@@ -62,7 +62,10 @@ class Backbone(IBackbone):
         self._operation_queue: List[int] = []
         self._operations: Dict[int, Dict[str, Any]] = {}
 
-    def set_source(self, path: str) -> None:
+    def set_source(self, path: Optional[str]) -> None:
+        if not path:
+            path = self.__default_data_path
+
         self._src = path
 
     def get_source(self) -> str:
@@ -71,7 +74,9 @@ class Backbone(IBackbone):
 
         return self.__default_data_path
 
-    def set_destination(self, path: str) -> None:
+    def set_destination(self, path: Optional[str]) -> None:
+        if not path:
+            path = self.__default_output_path
         self._dest = path
 
     def get_destination(self) -> str:

@@ -35,7 +35,7 @@ class ICLI(ABC):
         pass
 
     @abstractmethod
-    def generate_command(self, function: Callable[[...], Any]) -> None:
+    def generate_command(self, function: Callable[[Any], Any]) -> None:
 
         """
         Generates command from a given function and adds it to invokable commands of current CLI instance.
@@ -48,7 +48,7 @@ class ICLI(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_backbone() -> IBackbone:
+    def get_backbone() -> IBackbone | None:
 
         """
         Returns current CLI's DTO - IBackbone instance.
@@ -58,7 +58,8 @@ class ICLI(ABC):
 
         pass
 
-    def run(self) -> IBackbone:
+    @abstractmethod
+    def run(self) -> IBackbone | None:
 
         """
         Entry point for the command line interface.
@@ -91,7 +92,7 @@ class ICLIBuilder(ABC):
     @abstractmethod
     def build_group(
         self,
-        executable: Optional[Callable[[click.Context, ...], None]] = None,
+        executable: Optional[Callable[[click.Context, Any], None]] = None,
         arguments: Optional[Dict[str, click.Parameter]] = None,
         chain_commands: bool = True,
     ) -> click.Group:
