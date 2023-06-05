@@ -93,12 +93,15 @@ class CLIBuilder(ICLIBuilder):
 
         return Backbone()
 
-    def build_cli(self, plugins: Dict[str, Tuple[str, Signature]]) -> ICLI:
+    def build_cli(self, plugins: Optional[Dict[str, Tuple[str, Signature]]] = None) -> ICLI:
 
-        commands = self.build_commands(plugins)
         entry_point = self.build_group()
 
-        for command in commands:
-            entry_point.add_command(commands[command])
+        if plugins:
+
+            commands = self.build_commands(plugins)
+
+            for command in commands:
+                entry_point.add_command(commands[command])
 
         return CLI(entry_point, self._command_builder, self.build_backbone())
