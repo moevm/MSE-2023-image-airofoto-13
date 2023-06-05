@@ -26,9 +26,7 @@ class IConstraint(ABC):
 
 
 class ChoiceConstraint(IConstraint):
-    def __init__(
-        self, choices: List[str], case_sensitive: bool = True
-    ) -> None:
+    def __init__(self, choices: List[str], case_sensitive: bool = True) -> None:
         self.__click_representation = Choice(choices, case_sensitive)
 
     def to_click(self) -> ParamType:

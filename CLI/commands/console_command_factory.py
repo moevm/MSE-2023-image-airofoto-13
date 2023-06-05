@@ -39,14 +39,14 @@ class ConsoleCommandFactory(IConsoleCommandFactory):
 
     def kwargs_save_callback(self, name: str) -> Callable[[Context, Any], None]:
         @pass_context
-        def callback(ctx: Context, **kwargs:  Any) -> None:
+        def callback(ctx: Context, **kwargs: Any) -> None:
 
             data: Dict[str, str | Dict[str, Any]] = {"type": name}
             data.update(**kwargs)
 
             self._save_function(ctx, data)
 
-        return callback # type: ignore
+        return callback  # type: ignore
 
     def create_from_info(self, data: PluginInfo) -> Command:
         return self.create_from_signature(data.name, data.desc, data.sig)

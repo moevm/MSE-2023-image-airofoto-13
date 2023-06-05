@@ -3,7 +3,7 @@
 from CLI import CLIBuilder, Backbone
 from managers import PluginRegistry
 
-import open3d as o3d    # type: ignore
+import open3d as o3d  # type: ignore
 from inspect import Signature
 from typing import Dict, Tuple
 
