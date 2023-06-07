@@ -4,7 +4,7 @@ from numpy.typing import NDArray
 from numpy import float_
 import math
 import itertools
-from typing import Any, Tuple, List, Iterator
+from typing import Any, Tuple, List
 
 
 def crop_by_box(
