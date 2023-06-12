@@ -10,11 +10,15 @@ from framework import ITarget
 class PluginInfo:
     """
     DTO-object for transferring IPlugin instances description.
+
+    :name: - string, containing the name of the plugin
+    :desc: - string, containing the __doc__ attribute of the plugin function
+    :sig: - Signature objects, describing the parameters required by the plugin
     """
 
     name: str
     desc: str
-    signature: Signature
+    sig: Signature
 
 
 class IPluginRegistry(ABC):

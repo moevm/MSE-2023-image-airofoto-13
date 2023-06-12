@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from inspect import Signature
-from typing import Optional
+from typing import Dict, List
 
-from framework import ICommand
+from framework import ICommand, IConstraint
 
 
 class IPlugin(ICommand):
@@ -41,7 +41,35 @@ class IPluginFactory(ABC):
 
     @staticmethod
     @abstractmethod
-    def make_plugin(name: str, package: Optional[str] = None) -> IPlugin:
+    def _constrain(
+        original: Signature, constraints: Dict[str, IConstraint]
+    ) -> Signature:
+        """
+        Returns a modified Signature object, containing all the provided argument constraints.
+
+        :param original: Signature object of the original plugin
+        :param constraints: Dictionary of IConstraint instances
+
+        :return: Signature
+        """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def lookup(package: str) -> List[str]:
+        """
+        Returns a list of plugins located at a specified package (or the default one if None was provided).
+
+        :param package: Name of the package
+        :return: List of plugins inside the package.
+        """
+
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def make_plugin(name: str, package: str) -> IPlugin:
         """
         Static method for simple IPlugin instance creation.
 
